@@ -18,7 +18,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        return  Event::all();
+        return  Response::json(Event::all());
     }
 
     /**
@@ -29,7 +29,7 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        return Event::create($request->all());
+        return Response::json(Event::create($request->all()));
     }
 
     /**
@@ -40,7 +40,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return $event;
+        return Response::json($event);
     }
 
     /**
@@ -52,7 +52,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        return $event->update($request->all());
+        return Response::json($event->update($request->all()));
     }
     /**
      * Remove the specified resource from storage.
@@ -64,6 +64,6 @@ class EventController extends Controller
     {
         $event->delete();
 
-        return http_response_code(204);
+        return Response::json(http_response_code(204));
     }
 }
