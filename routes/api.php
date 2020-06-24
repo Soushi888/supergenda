@@ -14,6 +14,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * Event API
+ */
+Route::get("/event", "EventController@index");
+Route::get('/event/{event}', 'EventController@show');
+
+Route::post('/event', 'EventController@store');
+Route::put('/event/{event}', 'EventController@update');
+
+Route::delete('/event/{event}', 'EventController@destroy');
+/**
+ * End Event API
+ */
+
+
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
