@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Event;
+use Error;
+use Exception;
+use Illuminate\Auth\Events\Failed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -26,7 +29,7 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        Event::create($request->all());
+        return Event::create($request->all());
     }
 
     /**
@@ -49,7 +52,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        //
+        return $event->update($request->all());
     }
     /**
      * Remove the specified resource from storage.
@@ -59,6 +62,8 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //
+        $event->delete();
+
+        return http_response_code(204);
     }
 }
