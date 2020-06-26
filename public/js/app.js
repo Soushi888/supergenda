@@ -37336,43 +37336,49 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-(function afficherGrille() {
-  var tbody = $(".agenda tbody")[0];
-  var modele = $("#modele");
-  console.log(modele);
-  console.log(tbody);
+var Agenda = function () {
+  'use strict';
 
-  var _loop = function _loop(i) {
-    var tr = modele.clone().appendTo(tbody);
-    tr.removeAttr("id", "modele"); // console.log(tr);
+  return {
+    afficherGrille: function afficherGrille() {
+      var tbody = $(".agenda tbody")[0];
+      var modele = $("#modele");
+      console.log(modele);
+      console.log(tbody);
 
-    var tdHeure = tr.find("td.heure");
-    console.log(tdHeure);
+      var _loop = function _loop(i) {
+        var tr = modele.clone().appendTo(tbody);
+        tr.removeAttr("id", "modele"); // console.log(tr);
 
-    var heure = function heure() {
-      var heure = Math.floor(i / 2);
-      var minutes = "00";
+        var tdHeure = tr.find("td.heure");
+        console.log(tdHeure);
 
-      if (i % 2 !== 0) {
-        minutes = "30";
-        tr.addClass("etDemi");
-        console.log(tr);
-      } else {
-        minutes = "00";
+        var heure = function heure() {
+          var heure = Math.floor(i / 2);
+          var minutes = "00";
+
+          if (i % 2 !== 0) {
+            minutes = "30";
+            tr.addClass("etDemi");
+            console.log(tr);
+          } else {
+            minutes = "00";
+          }
+
+          return "".concat(heure, "h").concat(minutes);
+        };
+
+        tdHeure.text(heure);
+      };
+
+      for (var i = 0; i < 48; ++i) {
+        _loop(i);
       }
-
-      return "".concat(heure, "h").concat(minutes);
-    };
-
-    tdHeure.text(heure);
+    }
   };
+}();
 
-  for (var i = 0; i < 48; ++i) {
-    _loop(i);
-  }
-})();
-
-console.log("calendar.js loaded");
+Agenda.afficherGrille();
 
 /***/ }),
 
@@ -38020,6 +38026,14 @@ console.log('bootstrap.js loaded');
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+function startOfWeek(date) {
+  var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
+  return new Date(date.setDate(diff));
+}
+
+var current_week = startOfWeek(new Date());
+current_week = "".concat(current_week.getFullYear(), "-").concat(current_week.getMonth(), "-").concat(current_week.getDate());
+console.log(current_week);
 $("#calendar-container").scrollableCalendar({
   // star date
   startDate: "2020-01-01",
@@ -38027,6 +38041,7 @@ $("#calendar-container").scrollableCalendar({
   endDate: "2025-12-31",
   // default is 0 for Sunday - can be from 0 to 6 (I'm using zero based as that's how Date.getDay() works)
   startDay: 1,
+  currentWeek: current_week,
   // highlights the current week
   highlight: true,
   // array of true/false for week status
@@ -38039,7 +38054,7 @@ $("#calendar-container").scrollableCalendar({
   // if true, calendar row heights are the touchRowHeight
   touch: false,
   // Heights are in pixels
-  thumbHeight: 45,
+  thumbHeight: 35,
   touchRowHeight: 48,
   nonTouchRowHeight: 29,
   // callback

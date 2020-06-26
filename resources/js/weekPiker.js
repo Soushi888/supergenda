@@ -1,3 +1,17 @@
+function startOfWeek(date)
+  {
+    var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
+  
+    return new Date(date.setDate(diff));
+ 
+  }
+
+let current_week = (startOfWeek(new Date()));
+current_week = `${current_week.getFullYear()}-${current_week.getMonth()}-${current_week.getDate()}`;
+console.log(current_week);
+
+
+
 $("#calendar-container").scrollableCalendar({
     // star date
     startDate: "2020-01-01",
@@ -7,6 +21,8 @@ $("#calendar-container").scrollableCalendar({
 
     // default is 0 for Sunday - can be from 0 to 6 (I'm using zero based as that's how Date.getDay() works)
     startDay: 1,
+
+    currentWeek: current_week,
 
     // highlights the current week
     highlight: true,
@@ -38,7 +54,7 @@ $("#calendar-container").scrollableCalendar({
     touch: false,
 
     // Heights are in pixels
-    thumbHeight: 45,
+    thumbHeight: 35,
     touchRowHeight: 48,
     nonTouchRowHeight: 29,
 
