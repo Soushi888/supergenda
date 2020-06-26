@@ -10990,12 +10990,14 @@ a.text-dark:focus {
 
 .calendar-container {
   overflow: hidden;
-  width: 256px;
+  width: 280px;
   height: auto;
   position: relative;
   box-sizing: border-box;
   display: block;
-  margin: 0 auto 50px auto;
+  margin: 0 auto 20px auto;
+  border-radius: 15px;
+  background-color: #f2fdf2;
 }
 
 .calendar-border {
@@ -11003,6 +11005,7 @@ a.text-dark:focus {
   box-sizing: border-box;
   border: 1px solid #125716;
   border-top-width: 0;
+  border-bottom-left-radius: 16px;
   width: 255px;
   z-index: 11;
   -webkit-tap-highlight-color: transparent;
@@ -11050,6 +11053,7 @@ a.text-dark:focus {
 }
 
 .cal-mouse-only .calendar-track {
+  transform: translateX(25px);
   height: 232px;
 }
 
@@ -11068,6 +11072,7 @@ a.text-dark:focus {
 }
 
 .calendar-thumb {
+  transform: translateX(25px);
   position: absolute;
   width: 22px;
   height: 45px;
@@ -11140,11 +11145,11 @@ a.text-dark:focus {
 }
 
 .cal-odd-month {
-  background-color: #E1EDE2;
+  background-color: #e1ede2;
 }
 
 .cal-even-month {
-  background-color: #BFDEC0;
+  background-color: #bfdec0;
 }
 
 .cal-month-read {
@@ -11152,13 +11157,17 @@ a.text-dark:focus {
 }
 
 .cal-current-week td {
-  background-color: #00DB71;
+  background-color: #00db71;
   color: #212121;
 }
 
 .cal-row:hover td {
   background-color: #125716;
   color: #ffffff;
+}
+
+#current-week {
+  margin-bottom: 20px;
 }
 
 html,
@@ -11199,7 +11208,8 @@ table {
   text-align: center;
 }
 
-.title {
+.title h1 {
+  margin-top: 40px;
   font-size: 2rem;
 }
 
