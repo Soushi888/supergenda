@@ -22,12 +22,16 @@
             margin: 0;
         }
 
+        table {
+            border-collapse: collapse;
+        }
+
         .full-height {
             height: 100vh;
         }
 
         .flex-center {
-            align-items: center;
+            /* align-items: center; */
             display: flex;
             justify-content: center;
         }
@@ -47,7 +51,7 @@
         }
 
         .title {
-            font-size: 84px;
+            font-size: 2rem;
         }
 
         .links>a {
@@ -62,6 +66,18 @@
 
         .m-b-md {
             margin-bottom: 30px;
+        }
+
+        .calendar th {
+            padding: 0 1.5em;
+        }
+
+        #modele {
+            display: none;
+        }
+
+        .etDemi td {
+            border-bottom: solid black 2px;
         }
     </style>
 </head>
@@ -84,10 +100,41 @@
 
         <div class="content">
             <div class="title m-b-md">
-                Calendrier
+                <h1>Agendax</h1>
+            </div>
+            <div class="calendar">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Heure</th>
+                            <th>Lundi</th>
+                            <th>Mardi</th>
+                            <th>Mercredi</th>
+                            <th>Jeudi</th>
+                            <th>Vendredi</th>
+                            <th>Samedi</th>
+                            <th>Dimanche</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="modele">
+                            <td class="heure"></td>
+                            <td class="lundi"></td>
+                            <td class="mardi"></td>
+                            <td class="mercredi"></td>
+                            <td class="jeudi"></td>
+                            <td class="vendredi"></td>
+                            <td class="samedi"></td>
+                            <td class="dimanche"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>
