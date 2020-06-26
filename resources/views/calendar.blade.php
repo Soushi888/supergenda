@@ -11,75 +11,8 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
     <!-- Styles -->
-    <style>
-        html,
-        body {
-            background-color: #fff;
-            color: #636b6f;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 200;
-            height: 100vh;
-            margin: 0;
-        }
-
-        table {
-            border-collapse: collapse;
-        }
-
-        .full-height {
-            height: 100vh;
-        }
-
-        .flex-center {
-            /* align-items: center; */
-            display: flex;
-            justify-content: center;
-        }
-
-        .position-ref {
-            position: relative;
-        }
-
-        .top-right {
-            position: absolute;
-            right: 10px;
-            top: 18px;
-        }
-
-        .content {
-            text-align: center;
-        }
-
-        .title {
-            font-size: 2rem;
-        }
-
-        .links>a {
-            color: #636b6f;
-            padding: 0 25px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: .1rem;
-            text-decoration: none;
-            text-transform: uppercase;
-        }
-
-        .m-b-md {
-            margin-bottom: 30px;
-        }
-
-        .calendar th {
-            padding: 0 1.5em;
-        }
-
-        #modele {
-            display: none;
-        }
-
-        .etDemi td {
-            border-bottom: solid black 2px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/Calendar.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 
 <body>
@@ -102,7 +35,8 @@
             <div class="title m-b-md">
                 <h1>Agendax</h1>
             </div>
-            <div class="calendar">
+            <div class="agenda">
+                <div id="calendar-container"></div>
                 <table>
                     <thead>
                         <tr>
@@ -132,8 +66,6 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
-        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 
