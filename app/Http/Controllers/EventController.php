@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Event;
-use Error;
-use Exception;
-use Illuminate\Auth\Events\Failed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -22,17 +19,6 @@ class EventController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        return Response::json(Event::create($request->all()));
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  \App\Event  $event
@@ -44,6 +30,17 @@ class EventController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        return Response::json(Event::create($request->all()), 201);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -52,7 +49,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        return Response::json($event->update($request->all()));
+        return Response::json($event->update($request->all()), 200);
     }
     /**
      * Remove the specified resource from storage.
@@ -64,6 +61,6 @@ class EventController extends Controller
     {
         $event->delete();
 
-        return Response::json(http_response_code(204));
+        return Response::json(null, 204);
     }
 }
