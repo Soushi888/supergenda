@@ -37337,21 +37337,21 @@ module.exports = function(module) {
 /***/ (function(module, exports) {
 
 var Agenda = function () {
-  'use strict';
+  "use strict";
 
+  var data = $.get("api/event", function (data) {
+    console.log(data);
+    return data;
+  });
   return {
     afficherGrille: function afficherGrille() {
       var tbody = $(".agenda tbody")[0];
       var modele = $("#modele");
-      console.log(modele);
-      console.log(tbody);
 
       var _loop = function _loop(i) {
         var tr = modele.clone().appendTo(tbody);
-        tr.removeAttr("id", "modele"); // console.log(tr);
-
+        tr.removeAttr("id", "modele");
         var tdHeure = tr.find("td.heure");
-        console.log(tdHeure);
 
         var heure = function heure() {
           var heure = Math.floor(i / 2);
@@ -37360,7 +37360,6 @@ var Agenda = function () {
           if (i % 2 !== 0) {
             minutes = "30";
             tr.addClass("etDemi");
-            console.log(tr);
           } else {
             minutes = "00";
           }
@@ -37374,11 +37373,15 @@ var Agenda = function () {
       for (var i = 0; i < 48; ++i) {
         _loop(i);
       }
+    },
+    getEvents: function getEvents() {
+      return data;
     }
   };
 }();
 
 Agenda.afficherGrille();
+Agenda.getEvents(); // console.log(Agenda.getEvents());
 
 /***/ }),
 
@@ -38024,7 +38027,10 @@ console.log('bootstrap.js loaded');
   !*** ./resources/js/weekPiker.js ***!
   \***********************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 function startOfWeek(date) {
   var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
@@ -38032,8 +38038,14 @@ function startOfWeek(date) {
 }
 
 var current_week = startOfWeek(new Date());
-current_week = "".concat(current_week.getFullYear(), "-").concat(current_week.getMonth(), "-").concat(current_week.getDate());
-console.log(current_week);
+var current_month = current_week.getMonth();
+
+if (current_month < 10) {
+  current_month = "0" + current_month;
+}
+
+current_week = "".concat(current_week.getFullYear(), "-").concat(current_month, "-").concat(current_week.getDate());
+$("#current-week span").html(current_week);
 $("#calendar-container").scrollableCalendar({
   // star date
   startDate: "2020-01-01",
@@ -38047,7 +38059,7 @@ $("#calendar-container").scrollableCalendar({
   // array of true/false for week status
   readWeeks: [],
   // for different languages
-  dayNames: ["", "", "", "", "", "", ""],
+  dayNames: ["D", "L", "M", "M", "J", "V", "S"],
   monthNames: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
   // title of the calendar
   calendarTitle: "",
@@ -38059,8 +38071,8 @@ $("#calendar-container").scrollableCalendar({
   nonTouchRowHeight: 29,
   // callback
   onClick: function onClick() {
-    // window.alert(this);
-    $('#current-week span').html(this);
+    $("#current-week span").html(this);
+    console.log(this);
   },
   // The final values for rowHeight & rowCount are set programably - any presets or options values are ignored
   // This value is set in validateSettings function (any value passed in is ignored)

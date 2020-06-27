@@ -35,10 +35,10 @@
             <div class="title m-b-md">
                 <h1>Agendax</h1>
             </div>
-            <div class="agenda">
+            <div>
                 <div id="calendar-container"></div>
                 <div id="current-week">Semaine du : <span></span></div>
-                <table>
+                <table class="agenda">
                     <thead>
                         <tr>
                             <th>Heure</th>

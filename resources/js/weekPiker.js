@@ -1,16 +1,19 @@
-function startOfWeek(date)
-  {
+'use strict';
+function startOfWeek(date) {
     var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
-  
+
     return new Date(date.setDate(diff));
- 
-  }
+}
 
-let current_week = (startOfWeek(new Date()));
-current_week = `${current_week.getFullYear()}-${current_week.getMonth()}-${current_week.getDate()}`;
-console.log(current_week);
+let current_week = startOfWeek(new Date());
+let current_month = current_week.getMonth();
 
+if (current_month < 10) {
+    current_month = "0" + current_month;
+}
 
+current_week = `${current_week.getFullYear()}-${current_month}-${current_week.getDate()}`;
+$("#current-week span").html(current_week);
 
 $("#calendar-container").scrollableCalendar({
     // star date
@@ -31,7 +34,7 @@ $("#calendar-container").scrollableCalendar({
     readWeeks: [],
 
     // for different languages
-    dayNames: ["", "", "", "", "", "", ""],
+    dayNames: ["D", "L", "M", "M", "J", "V", "S"],
     monthNames: [
         "Jan",
         "Feb",
@@ -60,8 +63,9 @@ $("#calendar-container").scrollableCalendar({
 
     // callback
     onClick: function() {
-        // window.alert(this);
-        $('#current-week span').html(this);
+        $("#current-week span").html(this);
+        console.log(this);
+
     },
 
     // The final values for rowHeight & rowCount are set programably - any presets or options values are ignored
