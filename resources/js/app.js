@@ -7,9 +7,9 @@ require("./bootstrap");
 require("./agendax.js");
 
 // Week Piker
-require("./jquery.calendar.js");
-require("./WeekHistory.js");
-require("./weekPiker.js");
+require("./weekPiker/jquery.calendar.js");
+require("./weekPiker/WeekHistory.js");
+require("./weekPiker/weekPiker.js");
 
 
 

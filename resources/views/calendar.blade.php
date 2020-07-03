@@ -5,13 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Agendax</title>
+    <title>Supergenda</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('css/Calendar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 
@@ -33,7 +32,7 @@
 
         <div class="content">
             <div class="title m-b-md">
-                <h1>Agendax</h1>
+                <h1>Supergenda</h1>
             </div>
             <div>
                 <div id="calendar-container"></div>
