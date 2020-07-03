@@ -23,11 +23,11 @@ Cependant :
 - Support navigateurs: Au mois 2 navigateurs au choix
 
 # API
-- `GET /event` : Renvoie tous les événements
-- `GET /event/{id}` : Renvoie un événement
-- `POST /event` : Ajoute un événement
-- `PUT /event/{id}` : Met à jour un événement
-- `DELETE /event/{id}` : Supprime un événement
+- `GET api/event` : Renvoie tous les événements
+- `GET api/event/{id}` : Renvoie un événement
+- `POST api/event` : Ajoute un événement
+- `PUT api/event/{id}` : Met à jour un événement
+- `DELETE api/event/{id}` : Supprime un événement
 
 
 # Démo
