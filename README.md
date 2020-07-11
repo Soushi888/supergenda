@@ -1,7 +1,7 @@
 # Supergenda, le super agenda !
 ## Installation en local
 1. Copiez le fichier .env.example et renommez le .env
-2. Indiquez-y vos informations pour connecter votre base de donnée
+2. Indiquez-y vos informations pour connecter votre base de données
 3. Exécutez les commandes suivantes :
 
        $ composer install
