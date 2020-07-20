@@ -28,7 +28,7 @@ let events = $.get("http://supergenda.perso/api/event", data => {
     let list = $("#event_list ul");
     $(data).each(index => {
         let li = list.append(
-            `<li>Id = ${data[index].id}, nom = ${data[index].name}</li>`
+            `<li>Id = ${data[index].id}, nom = ${data[index].name}, catégorie = ${data[index].categorie}, date début = ${data[index].date_debut}, date fin = ${data[index].date_fin}</li>`
         );
     });
 });
@@ -37,6 +37,7 @@ let events = $.get("http://supergenda.perso/api/event", data => {
 let today = new Date();
 let lundiCourant = getDateOfWeekDay(today, 1);
 
+$("#datepicker").val(today.getDate());
 $("#selection-semaine span").text(
     `${nomJoursSemaine(lundiCourant.getDay())} ${
         lundiCourant.getDate()} ${nomMois(lundiCourant.getMonth())} ${lundiCourant.getFullYear()}`

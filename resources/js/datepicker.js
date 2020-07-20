@@ -169,7 +169,7 @@ function nomJoursSemaine(jours) {
 
 /**
  * Retourne le nom en français du numéro du mois donné en paramètre.
- * @param {Int} mois 
+ * @param {Int} mois
  */
 function nomMois(mois) {
     mois++;
