@@ -21,8 +21,15 @@
                 <h1>Supergenda</h1>
             </div>
             <div>
-                <div id="calendar-container"></div>
-                <div id="current-week">Semaine du : <span></span></div>
+                <div id="event_list">
+                    <h2>Liste des événements</h2>
+                    <ul>
+                    </ul>
+                </div>
+                <div id="selection-semaine">
+                    <input type="date" id="datepicker">
+                    <p>Semaine du : <span></span></p>
+                </div>
                 <table class="agenda">
                     <thead>
                         <tr>

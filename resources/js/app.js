@@ -4,7 +4,9 @@ import $ from "jquery";
 
 // Génération du calendrier
 for (let i = 0; i <= 47; ++i) {
-    let tr = $("#modele").clone().attr("id", "");
+    let tr = $("#modele")
+        .clone()
+        .attr("id", "");
 
     let tdHeure = tr.children(".heure");
 
@@ -21,3 +23,16 @@ for (let i = 0; i <= 47; ++i) {
 
     tbody.append(tr);
 }
+
+// Récupération de la liste des événements
+let events = $.get("http://supergenda.perso/api/event", data => {
+    // console.log(data);
+    let list = $("#event_list ul");
+    $(data).each(index => {
+        let li = list.append(
+            `<li>Id = ${data[index].id}, nom = ${data[index].name}</li>`
+        );
+    });
+});
+
+console.log(addzero("4"));
