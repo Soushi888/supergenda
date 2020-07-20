@@ -11,8 +11,7 @@ const mix = require("laravel-mix");
  |
  */
 
-mix.js(["resources/js/app.js", "resources/js/datepicker.js"], "public/js")
-.sass(
+mix.combine(["resources/js/datepicker.js", "resources/js/app.js"], "public/js/app.js").sass(
     "resources/sass/app.scss",
     "public/css"
 );

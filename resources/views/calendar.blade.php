@@ -28,19 +28,19 @@
                 </div>
                 <div id="selection-semaine">
                     <input type="date" id="datepicker">
-                    <p>Semaine du : <span></span></p>
+                    <p>Semaine du <span></span></p>
                 </div>
                 <table class="agenda">
                     <thead>
                         <tr>
                             <th>Heure</th>
-                            <th>Lundi</th>
-                            <th>Mardi</th>
-                            <th>Mercredi</th>
-                            <th>Jeudi</th>
-                            <th>Vendredi</th>
-                            <th>Samedi</th>
-                            <th>Dimanche</th>
+                            <th class="lundi">Lundi <span></span></th>
+                            <th class="mardi">Mardi <span></span></th>
+                            <th class="mercredi">Mercredi <span></span></th>
+                            <th class="jeudi">Jeudi <span></span></th>
+                            <th class="vendredi">Vendredi <span></span></th>
+                            <th class="samedi">Samedi <span></span></th>
+                            <th class="dimanche">Dimanche <span></span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,8 +59,8 @@
             </div>
         </div>
     </div>
-    {{-- <script src="http://code.jquery.com/jquery-3.5.1.min.js"
-        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script> --}}
+    <script src="http://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 

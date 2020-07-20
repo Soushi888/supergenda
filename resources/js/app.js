@@ -1,5 +1,3 @@
-import $ from "jquery";
-
 ("use strict");
 
 // Génération du calendrier
@@ -35,4 +33,44 @@ let events = $.get("http://supergenda.perso/api/event", data => {
     });
 });
 
-console.log(addzero("4"));
+// initialise la date avec celle de la semaine courrante
+let today = new Date();
+let lundiCourant = getDateOfWeekDay(today, 1);
+
+$("#selection-semaine span").text(
+    `${nomJoursSemaine(lundiCourant.getDay())} ${
+        lundiCourant.getDate()} ${nomMois(lundiCourant.getMonth())} ${lundiCourant.getFullYear()}`
+);
+
+// Change le lundi de la semaine qui est affiché à chaque fois que le input date change
+$("#datepicker").on("change", evt => {
+    let nouveauLundi = getDateOfWeekDay(evt.target.value, 1);
+
+    $("#selection-semaine span").text(
+        `${nomJoursSemaine(nouveauLundi.getDay())} ${
+            nouveauLundi.getDate()} ${nomMois(nouveauLundi.getMonth())} ${nouveauLundi.getFullYear()}`
+    );
+
+    // Ajuste le numéro des jours à coté des nom des jours de la semaine dans le calendrier
+    let numLundi = $(".lundi span").text(
+        addZero(getDateOfWeekDay(evt.target.value, 1).getDate())
+    );
+    let numMardi = $(".mardi span").text(
+        addZero(getDateOfWeekDay(evt.target.value, 2).getDate())
+    );
+    let numMercredi = $(".mercredi span").text(
+        addZero(getDateOfWeekDay(evt.target.value, 3).getDate())
+    );
+    let numJeudi = $(".jeudi span").text(
+        addZero(getDateOfWeekDay(evt.target.value, 4).getDate())
+    );
+    let numVendredi = $(".vendredi span").text(
+        addZero(getDateOfWeekDay(evt.target.value, 5).getDate())
+    );
+    let numSamedi = $(".samedi span").text(
+        addZero(getDateOfWeekDay(evt.target.value, 6).getDate())
+    );
+    let numDimanche = $(".dimanche span").text(
+        addZero(getDateOfWeekDay(evt.target.value, 0).getDate())
+    );
+});
