@@ -55,41 +55,59 @@ class Semainier {
         );
     }
     /**
-     * Affiche dans le semainier les événements d'une semaine en particulier
+     * Affiche dans le semainier les événements stockés dans le localStorage d'une semaine en particulier
      * @param {Date} monday
      */
     afficherEvent(monday) {
-        $("td").removeClass("event start-event end-event")
+        let year = monday.getFullYear();
+        let week = monday.getWeek();
 
-        let events = new Events();
+        $("td").removeClass("event start-event end-event");
 
-        events = events.getEventsByWeek(monday).always(data => {
-            console.log(data);
-            $(data).each((index, element) => {
-                let date_debut = new Date(element.date_debut);
-                let date_fin = new Date(element.date_fin);
+        let events = [];
+        $(JSON.parse(localStorage.events)).each((index, element) => {
+            let yearEvent = new Date(element.date_debut).getFullYear();
+            let weekEvent = new Date(element.date_debut).getWeek();
+            if (yearEvent == year && weekEvent == week) {
+                events.push(element);
+            }
+        });
 
-                let jours = datepicker.nomJoursSemaine(date_debut.getDay());
-                let heure_debut = `${datepicker.addZero(
-                    date_debut.getHours()
-                )}:${datepicker.addZero(date_debut.getMinutes())}`;
-                let heure_fin = `${datepicker.addZero(
-                    date_fin.getHours()
-                )}:${datepicker.addZero(date_fin.getMinutes())}`;
+        $(events).each((index, element) => {
+            let date_debut = new Date(element.date_debut);
+            let date_fin = new Date(element.date_fin);
 
-                $(`td.${jours}`).each((index, element) => {
-                    if ($(element).data("houre") == heure_debut) {
-                        $(element).addClass("event");
-                        $(element).addClass("start-event");
-                    }
-                    if ($(element).data("houre") == heure_fin) {
-                        $(element).parent().prev().children(`.${jours}`).addClass("event");
-                        $(element).parent().prev().children(`.${jours}`).addClass("end-event");
-                    }
-                    if($(element).data("houre") > heure_debut && $(element).data("houre") < heure_fin) {
-                        $(element).addClass("event");
-                    }
-                });
+            let jours = datepicker.nomJoursSemaine(date_debut.getDay());
+            let heure_debut = `${datepicker.addZero(
+                date_debut.getHours()
+            )}:${datepicker.addZero(date_debut.getMinutes())}`;
+            let heure_fin = `${datepicker.addZero(
+                date_fin.getHours()
+            )}:${datepicker.addZero(date_fin.getMinutes())}`;
+
+            $(`td.${jours}`).each((index, element) => {
+                if ($(element).data("houre") == heure_debut) {
+                    $(element).addClass("event");
+                    $(element).addClass("start-event");
+                }
+                if ($(element).data("houre") == heure_fin) {
+                    $(element)
+                        .parent()
+                        .prev()
+                        .children(`.${jours}`)
+                        .addClass("event");
+                    $(element)
+                        .parent()
+                        .prev()
+                        .children(`.${jours}`)
+                        .addClass("end-event");
+                }
+                if (
+                    $(element).data("houre") > heure_debut &&
+                    $(element).data("houre") < heure_fin
+                ) {
+                    $(element).addClass("event");
+                }
             });
         });
     }

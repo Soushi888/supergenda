@@ -5,6 +5,11 @@ class App {
         new Semainier();
         Events.listeEvents();
 
+        let events = new Events();
+        events.getEvents().always(data => {
+            localStorage.events = JSON.stringify(data);
+        });
+
         // initialise la date avec celle de la semaine courrante
         let today = new Date();
         let lundiCourant = datepicker.getDateOfWeekDay(today, 1);

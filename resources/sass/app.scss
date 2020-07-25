@@ -7,7 +7,6 @@
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
 
-
 html,
 body {
     background-color: #fff;
@@ -83,6 +82,11 @@ table {
     border-left: 1px black solid;
     border-right: 1px black solid;
 }
+
+// .event:hover {
+//     -webkit-box-shadow: 5px 5px 15px 5px #000000;
+//     box-shadow: 5px 5px 15px 5px #000000;
+// }
 
 .start-event {
     border-top: 1px black solid;

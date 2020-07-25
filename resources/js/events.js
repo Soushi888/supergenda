@@ -15,22 +15,10 @@ class Events {
         });
     }
 
-    getEventsByWeek(monday) {
-        let year = monday.getFullYear();
-        let week = monday.getWeek();
-
-        let events = [];
-
-        return $.get(this.URL_EVENTS, data => {
-            $(data).each(index => {
-                let yearEvent = new Date(data[index].date_debut).getFullYear();
-                let weekEvent = new Date(data[index].date_debut).getWeek();
-                if (yearEvent == year && weekEvent == week) {
-                    events.push(data[index]);
-                }
-
-                return events;
-            });
-        });
+    /**
+     * Récupère les évenements du calendrier depuis l'API
+     */
+    getEvents() {
+        return $.get(this.URL_EVENTS);
     }
 }

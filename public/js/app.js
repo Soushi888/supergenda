@@ -278,23 +278,13 @@ var Events = /*#__PURE__*/function () {
   }
 
   _createClass(Events, [{
-    key: "getEventsByWeek",
-    value: function getEventsByWeek(monday) {
-      var year = monday.getFullYear();
-      var week = monday.getWeek();
-      var events = [];
-      return $.get(this.URL_EVENTS, function (data) {
-        $(data).each(function (index) {
-          var yearEvent = new Date(data[index].date_debut).getFullYear();
-          var weekEvent = new Date(data[index].date_debut).getWeek();
+    key: "getEvents",
 
-          if (yearEvent == year && weekEvent == week) {
-            events.push(data[index]);
-          }
-
-          return events;
-        });
-      });
+    /**
+     * Récupère les évenements du calendrier depuis l'API
+     */
+    value: function getEvents() {
+      return $.get(this.URL_EVENTS);
     }
   }], [{
     key: "listeEvents",
@@ -344,35 +334,42 @@ var Semainier = /*#__PURE__*/function () {
     key: "afficherEvent",
 
     /**
-     * Affiche dans le semainier les événements d'une semaine en particulier
+     * Affiche dans le semainier les événements stockés dans le localStorage d'une semaine en particulier
      * @param {Date} monday
      */
     value: function afficherEvent(monday) {
+      var year = monday.getFullYear();
+      var week = monday.getWeek();
       $("td").removeClass("event start-event end-event");
-      var events = new Events();
-      events = events.getEventsByWeek(monday).always(function (data) {
-        console.log(data);
-        $(data).each(function (index, element) {
-          var date_debut = new Date(element.date_debut);
-          var date_fin = new Date(element.date_fin);
-          var jours = datepicker.nomJoursSemaine(date_debut.getDay());
-          var heure_debut = "".concat(datepicker.addZero(date_debut.getHours()), ":").concat(datepicker.addZero(date_debut.getMinutes()));
-          var heure_fin = "".concat(datepicker.addZero(date_fin.getHours()), ":").concat(datepicker.addZero(date_fin.getMinutes()));
-          $("td.".concat(jours)).each(function (index, element) {
-            if ($(element).data("houre") == heure_debut) {
-              $(element).addClass("event");
-              $(element).addClass("start-event");
-            }
+      var events = [];
+      $(JSON.parse(localStorage.events)).each(function (index, element) {
+        var yearEvent = new Date(element.date_debut).getFullYear();
+        var weekEvent = new Date(element.date_debut).getWeek();
 
-            if ($(element).data("houre") == heure_fin) {
-              $(element).parent().prev().children(".".concat(jours)).addClass("event");
-              $(element).parent().prev().children(".".concat(jours)).addClass("end-event");
-            }
+        if (yearEvent == year && weekEvent == week) {
+          events.push(element);
+        }
+      });
+      $(events).each(function (index, element) {
+        var date_debut = new Date(element.date_debut);
+        var date_fin = new Date(element.date_fin);
+        var jours = datepicker.nomJoursSemaine(date_debut.getDay());
+        var heure_debut = "".concat(datepicker.addZero(date_debut.getHours()), ":").concat(datepicker.addZero(date_debut.getMinutes()));
+        var heure_fin = "".concat(datepicker.addZero(date_fin.getHours()), ":").concat(datepicker.addZero(date_fin.getMinutes()));
+        $("td.".concat(jours)).each(function (index, element) {
+          if ($(element).data("houre") == heure_debut) {
+            $(element).addClass("event");
+            $(element).addClass("start-event");
+          }
 
-            if ($(element).data("houre") > heure_debut && $(element).data("houre") < heure_fin) {
-              $(element).addClass("event");
-            }
-          });
+          if ($(element).data("houre") == heure_fin) {
+            $(element).parent().prev().children(".".concat(jours)).addClass("event");
+            $(element).parent().prev().children(".".concat(jours)).addClass("end-event");
+          }
+
+          if ($(element).data("houre") > heure_debut && $(element).data("houre") < heure_fin) {
+            $(element).addClass("event");
+          }
         });
       });
     }
@@ -399,7 +396,11 @@ var App = /*#__PURE__*/function () {
     _classCallCheck(this, App);
 
     new Semainier();
-    Events.listeEvents(); // initialise la date avec celle de la semaine courrante
+    Events.listeEvents();
+    var events = new Events();
+    events.getEvents().always(function (data) {
+      localStorage.events = JSON.stringify(data);
+    }); // initialise la date avec celle de la semaine courrante
 
     var today = new Date();
     var lundiCourant = datepicker.getDateOfWeekDay(today, 1);
