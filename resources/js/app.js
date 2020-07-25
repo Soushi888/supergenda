@@ -1,5 +1,3 @@
-("use strict");
-
 // Génération du calendrier
 for (let i = 0; i <= 47; ++i) {
     let tr = $("#modele")
@@ -21,17 +19,6 @@ for (let i = 0; i <= 47; ++i) {
 
     tbody.append(tr);
 }
-
-// Récupération de la liste des événements
-let events = $.get("http://supergenda.perso/api/event", data => {
-    // console.log(data);
-    let list = $("#event_list ul");
-    $(data).each(index => {
-        let li = list.append(
-            `<li>Id = ${data[index].id}, nom = ${data[index].name}, catégorie = ${data[index].categorie}, date début = ${data[index].date_debut}, date fin = ${data[index].date_fin}</li>`
-        );
-    });
-});
 
 // initialise la date avec celle de la semaine courrante
 let today = new Date();
@@ -74,4 +61,15 @@ $("#datepicker").on("change", evt => {
     let numDimanche = $(".dimanche span").text(
         addZero(getDateOfWeekDay(evt.target.value, 0).getDate())
     );
+});
+
+// Récupération de la liste des événements
+let events = $.get("http://supergenda.perso/api/event", data => {
+    // console.log(data);
+    let list = $("#event_list ul");
+    $(data).each(index => {
+        let li = list.append(
+            `<li>Id = ${data[index].id}, nom = ${data[index].name}, catégorie = ${data[index].categorie}, date début = ${data[index].date_debut}, date fin = ${data[index].date_fin}</li>`
+        );
+    });
 });
