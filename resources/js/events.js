@@ -19,8 +19,9 @@ class Events {
         let year = monday.getFullYear();
         let week = monday.getWeek();
 
+        let events = [];
+
         return $.get(this.URL_EVENTS, data => {
-            let events = [];
             $(data).each(index => {
                 let yearEvent = new Date(data[index].date_debut).getFullYear();
                 let weekEvent = new Date(data[index].date_debut).getWeek();

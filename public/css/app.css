@@ -11000,5 +11000,15 @@ table {
 
 .event {
   background-color: #6574cd;
+  border-left: 1px black solid;
+  border-right: 1px black solid;
+}
+
+.start-event {
+  border-top: 1px black solid;
+}
+
+.end-event {
+  border-bottom: 1px black solid;
 }
 

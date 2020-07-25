@@ -282,8 +282,8 @@ var Events = /*#__PURE__*/function () {
     value: function getEventsByWeek(monday) {
       var year = monday.getFullYear();
       var week = monday.getWeek();
+      var events = [];
       return $.get(this.URL_EVENTS, function (data) {
-        var events = [];
         $(data).each(function (index) {
           var yearEvent = new Date(data[index].date_debut).getFullYear();
           var weekEvent = new Date(data[index].date_debut).getWeek();
@@ -326,10 +326,10 @@ var Semainier = /*#__PURE__*/function () {
 
       if (i % 2 == 0) {
         tdHeure.text("".concat(heure, "h00"));
-        td.data("houre", "".concat(heure, ":00"));
+        td.data("houre", "".concat(datepicker.addZero(heure), ":00"));
       } else {
         tdHeure.text("".concat(heure, "h30"));
-        td.data("houre", "".concat(heure, ":30"));
+        td.data("houre", "".concat(datepicker.addZero(heure), ":30"));
         tr.css("border-bottom", "1px solid black");
       }
 
@@ -348,18 +348,28 @@ var Semainier = /*#__PURE__*/function () {
      * @param {Date} monday
      */
     value: function afficherEvent(monday) {
+      $("td").removeClass("event start-event end-event");
       var events = new Events();
       events = events.getEventsByWeek(monday).always(function (data) {
         console.log(data);
-        var horaire = [];
         $(data).each(function (index, element) {
           var date_debut = new Date(element.date_debut);
           var date_fin = new Date(element.date_fin);
-          var jours = date_debut.getDay();
+          var jours = datepicker.nomJoursSemaine(date_debut.getDay());
           var heure_debut = "".concat(datepicker.addZero(date_debut.getHours()), ":").concat(datepicker.addZero(date_debut.getMinutes()));
           var heure_fin = "".concat(datepicker.addZero(date_fin.getHours()), ":").concat(datepicker.addZero(date_fin.getMinutes()));
-          $("td").each(function (index, element) {
-            if (element.classList == datepicker.nomJoursSemaine(jours) && ($(element).data("houre") == heure_debut || $(element).data("houre") == heure_fin)) {
+          $("td.".concat(jours)).each(function (index, element) {
+            if ($(element).data("houre") == heure_debut) {
+              $(element).addClass("event");
+              $(element).addClass("start-event");
+            }
+
+            if ($(element).data("houre") == heure_fin) {
+              $(element).parent().prev().children(".".concat(jours)).addClass("event");
+              $(element).parent().prev().children(".".concat(jours)).addClass("end-event");
+            }
+
+            if ($(element).data("houre") > heure_debut && $(element).data("houre") < heure_fin) {
               $(element).addClass("event");
             }
           });

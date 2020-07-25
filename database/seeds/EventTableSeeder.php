@@ -36,7 +36,7 @@ class EventTableSeeder extends Seeder
         $event->name = "Coffe and Code";
         $event->categorie = "réseautage";
         $event->date_debut = "2020-07-24 08:00:00";
-        $event->date_fin = "2020-07-24 10:00:00";
+        $event->date_fin = "2020-07-24 10:30:00";
         $event->save();
     }
 }

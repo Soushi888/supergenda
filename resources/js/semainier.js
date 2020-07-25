@@ -15,10 +15,10 @@ class Semainier {
 
             if (i % 2 == 0) {
                 tdHeure.text(`${heure}h00`);
-                td.data("houre", `${heure}:00`);
+                td.data("houre", `${datepicker.addZero(heure)}:00`);
             } else {
                 tdHeure.text(`${heure}h30`);
-                td.data("houre", `${heure}:30`);
+                td.data("houre", `${datepicker.addZero(heure)}:30`);
                 tr.css("border-bottom", "1px solid black");
             }
 
@@ -59,16 +59,17 @@ class Semainier {
      * @param {Date} monday
      */
     afficherEvent(monday) {
+        $("td").removeClass("event start-event end-event")
+
         let events = new Events();
 
         events = events.getEventsByWeek(monday).always(data => {
             console.log(data);
-            let horaire = [];
             $(data).each((index, element) => {
                 let date_debut = new Date(element.date_debut);
                 let date_fin = new Date(element.date_fin);
 
-                let jours = date_debut.getDay();
+                let jours = datepicker.nomJoursSemaine(date_debut.getDay());
                 let heure_debut = `${datepicker.addZero(
                     date_debut.getHours()
                 )}:${datepicker.addZero(date_debut.getMinutes())}`;
@@ -76,13 +77,16 @@ class Semainier {
                     date_fin.getHours()
                 )}:${datepicker.addZero(date_fin.getMinutes())}`;
 
-                $("td").each((index, element) => {
-                    if (
-                        element.classList ==
-                            datepicker.nomJoursSemaine(jours) &&
-                        ($(element).data("houre") == heure_debut ||
-                            $(element).data("houre") == heure_fin)
-                    ) {
+                $(`td.${jours}`).each((index, element) => {
+                    if ($(element).data("houre") == heure_debut) {
+                        $(element).addClass("event");
+                        $(element).addClass("start-event");
+                    }
+                    if ($(element).data("houre") == heure_fin) {
+                        $(element).parent().prev().children(`.${jours}`).addClass("event");
+                        $(element).parent().prev().children(`.${jours}`).addClass("end-event");
+                    }
+                    if($(element).data("houre") > heure_debut && $(element).data("houre") < heure_fin) {
                         $(element).addClass("event");
                     }
                 });
