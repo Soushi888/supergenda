@@ -1,6 +1,6 @@
-class Calendrier {
+class Semainier {
     constructor() {
-        // Génération du calendrier
+        // Génération du semainier
         for (let i = 0; i <= 47; ++i) {
             let tr = $("#modele")
                 .clone()
@@ -11,12 +11,17 @@ class Calendrier {
             let heure = Math.floor(i / 2);
             let tbody = $("tbody");
 
+            let td = tr.children("td");
+
             if (i % 2 == 0) {
                 tdHeure.text(`${heure}h00`);
+                td.data("houre", `${heure}:00`);
             } else {
                 tdHeure.text(`${heure}h30`);
+                td.data("houre", `${heure}:30`);
                 tr.css("border-bottom", "1px solid black");
             }
+
             tdHeure.css("border-right", "1px solid black");
 
             tbody.append(tr);
@@ -25,7 +30,7 @@ class Calendrier {
         }
     }
 
-    // Ajuste le numéro des jours à coté des nom des jours de la semaine dans le calendrier
+    // Ajuste le numéro des jours à coté des nom des jours de la semaine dans le semainier
     static ajusterSemaine(date) {
         let numLundi = $(".lundi span").text(
             datepicker.addZero(datepicker.getDateOfWeekDay(date, 1).getDate())
@@ -47,10 +52,41 @@ class Calendrier {
         );
         let numDimanche = $(".dimanche span").text(
             datepicker.addZero(datepicker.getDateOfWeekDay(date, 0).getDate())
-        )
+        );
     }
+    /**
+     * Affiche dans le semainier les événements d'une semaine en particulier
+     * @param {Date} monday
+     */
+    afficherEvent(monday) {
+        let events = new Events();
 
-    afficherEvent() {
-        // new Events();
+        events = events.getEventsByWeek(monday).always(data => {
+            console.log(data);
+            let horaire = [];
+            $(data).each((index, element) => {
+                let date_debut = new Date(element.date_debut);
+                let date_fin = new Date(element.date_fin);
+
+                let jours = date_debut.getDay();
+                let heure_debut = `${datepicker.addZero(
+                    date_debut.getHours()
+                )}:${datepicker.addZero(date_debut.getMinutes())}`;
+                let heure_fin = `${datepicker.addZero(
+                    date_fin.getHours()
+                )}:${datepicker.addZero(date_fin.getMinutes())}`;
+
+                $("td").each((index, element) => {
+                    if (
+                        element.classList ==
+                            datepicker.nomJoursSemaine(jours) &&
+                        ($(element).data("houre") == heure_debut ||
+                            $(element).data("houre") == heure_fin)
+                    ) {
+                        $(element).addClass("event");
+                    }
+                });
+            });
+        });
     }
 }

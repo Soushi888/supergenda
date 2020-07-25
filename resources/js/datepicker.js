@@ -1,5 +1,8 @@
 "use strict";
 
+/**
+ * Classe contenant des methodes statiques aidant à traiter les dates
+ */
 class datepicker {
     /**
      * Si le nombre donné en paramètre (qu'il soit sous forme d'entier ou de caractère) est inclusivement compris entre 1 et 9, ajoute un zéro devant.
@@ -8,6 +11,12 @@ class datepicker {
      */
     static addZero(number) {
         switch (number) {
+            case 0:
+                number = "00";
+                break;
+            case "0":
+                number = "00";
+                break;
             case 1:
                 number = "01";
                 break;
@@ -70,7 +79,7 @@ class datepicker {
     /**
      * Retourne la date de la journée donnée d'une semaine donnée. 0 étant dimanche et 6 étant samedi.
      * @param {Date} date
-     * @param {Int} jours
+     * @param {number} jours
      */
     static getDateOfWeekDay(date, jours) {
         date = new Date(date);
@@ -116,7 +125,7 @@ class datepicker {
 
     /**
      * Retourne le nom en fraçais du numéro de la journée de semaine donné en paramètre.
-     * @param {Int} jours
+     * @param {number} jours
      */
     static nomJoursSemaine(jours) {
         switch (jours) {
@@ -139,7 +148,7 @@ class datepicker {
 
     /**
      * Retourne le nom en français du numéro du mois donné en paramètre.
-     * @param {Int} mois
+     * @param {number} mois
      */
     static nomMois(mois) {
         switch (mois) {

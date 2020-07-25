@@ -16,7 +16,7 @@ mix.babel(
         "resources/js/date.prototype.js",
         "resources/js/datepicker.js",
         "resources/js/events.js",
-        "resources/js/calendrier.js",
+        "resources/js/semainier.js",
         "resources/js/app.js"
     ],
     "public/js/app.js"

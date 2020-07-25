@@ -2,7 +2,7 @@
 
 class App {
     constructor() {
-        new Calendrier();
+        new Semainier();
         Events.listeEvents();
 
         // initialise la date avec celle de la semaine courrante
@@ -17,9 +17,12 @@ class App {
                 lundiCourant.getMonth()
             )} ${lundiCourant.getFullYear()}`
         );
-        Calendrier.ajusterSemaine(today);
+        Semainier.ajusterSemaine(today);
 
         this.udpateDate();
+
+        let semainier = new Semainier();
+        semainier.afficherEvent(new Date(lundiCourant));
     }
 
     udpateDate() {
@@ -36,7 +39,10 @@ class App {
             );
 
             let dateSelect = evt.target.value;
-            Calendrier.ajusterSemaine(evt.target.value);
+            Semainier.ajusterSemaine(evt.target.value);
+
+            let semainier = new Semainier();
+            semainier.afficherEvent(new Date(nouveauLundi));
         });
     }
 }

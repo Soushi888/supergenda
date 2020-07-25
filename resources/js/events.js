@@ -3,7 +3,6 @@ class Events {
         this.URL_EVENTS = "http://supergenda.perso/api/event";
     }
 
-
     static listeEvents() {
         const URL_EVENTS = "http://supergenda.perso/api/event";
         $.get(URL_EVENTS, data => {
@@ -15,11 +14,22 @@ class Events {
             });
         });
     }
-}
 
-getEventsByWeek(monday) {
+    getEventsByWeek(monday) {
+        let year = monday.getFullYear();
+        let week = monday.getWeek();
 
-    $.get(this.URL_EVENTS, data => {
-        // if
-    })
+        return $.get(this.URL_EVENTS, data => {
+            let events = [];
+            $(data).each(index => {
+                let yearEvent = new Date(data[index].date_debut).getFullYear();
+                let weekEvent = new Date(data[index].date_debut).getWeek();
+                if (yearEvent == year && weekEvent == week) {
+                    events.push(data[index]);
+                }
+
+                return events;
+            });
+        });
+    }
 }
