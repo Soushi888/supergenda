@@ -1,75 +1,43 @@
-// Génération du calendrier
-for (let i = 0; i <= 47; ++i) {
-    let tr = $("#modele")
-        .clone()
-        .attr("id", "");
+"use strict";
 
-    let tdHeure = tr.children(".heure");
+class App {
+    constructor() {
+        new Calendrier();
+        Events.listeEvents();
 
-    let heure = Math.floor(i / 2);
-    let tbody = $("tbody");
+        // initialise la date avec celle de la semaine courrante
+        let today = new Date();
+        let lundiCourant = datepicker.getDateOfWeekDay(today, 1);
 
-    if (i % 2 == 0) {
-        tdHeure.text(`${heure}h00`);
-    } else {
-        tdHeure.text(`${heure}h30`);
-        tr.css("border-bottom", "1px solid black");
-    }
-    tdHeure.css("border-right", "1px solid black");
-
-    tbody.append(tr);
-}
-
-// initialise la date avec celle de la semaine courrante
-let today = new Date();
-let lundiCourant = getDateOfWeekDay(today, 1);
-
-$("#datepicker").val(today.getDate());
-$("#selection-semaine span").text(
-    `${nomJoursSemaine(lundiCourant.getDay())} ${
-        lundiCourant.getDate()} ${nomMois(lundiCourant.getMonth())} ${lundiCourant.getFullYear()}`
-);
-
-// Change le lundi de la semaine qui est affiché à chaque fois que le input date change
-$("#datepicker").on("change", evt => {
-    let nouveauLundi = getDateOfWeekDay(evt.target.value, 1);
-
-    $("#selection-semaine span").text(
-        `${nomJoursSemaine(nouveauLundi.getDay())} ${
-            nouveauLundi.getDate()} ${nomMois(nouveauLundi.getMonth())} ${nouveauLundi.getFullYear()}`
-    );
-
-    // Ajuste le numéro des jours à coté des nom des jours de la semaine dans le calendrier
-    let numLundi = $(".lundi span").text(
-        addZero(getDateOfWeekDay(evt.target.value, 1).getDate())
-    );
-    let numMardi = $(".mardi span").text(
-        addZero(getDateOfWeekDay(evt.target.value, 2).getDate())
-    );
-    let numMercredi = $(".mercredi span").text(
-        addZero(getDateOfWeekDay(evt.target.value, 3).getDate())
-    );
-    let numJeudi = $(".jeudi span").text(
-        addZero(getDateOfWeekDay(evt.target.value, 4).getDate())
-    );
-    let numVendredi = $(".vendredi span").text(
-        addZero(getDateOfWeekDay(evt.target.value, 5).getDate())
-    );
-    let numSamedi = $(".samedi span").text(
-        addZero(getDateOfWeekDay(evt.target.value, 6).getDate())
-    );
-    let numDimanche = $(".dimanche span").text(
-        addZero(getDateOfWeekDay(evt.target.value, 0).getDate())
-    );
-});
-
-// Récupération de la liste des événements
-let events = $.get("http://supergenda.perso/api/event", data => {
-    // console.log(data);
-    let list = $("#event_list ul");
-    $(data).each(index => {
-        let li = list.append(
-            `<li>Id = ${data[index].id}, nom = ${data[index].name}, catégorie = ${data[index].categorie}, date début = ${data[index].date_debut}, date fin = ${data[index].date_fin}</li>`
+        $("#datepicker").val(today.getDate());
+        $("#selection-semaine span").text(
+            `${datepicker.nomJoursSemaine(
+                lundiCourant.getDay()
+            )} ${lundiCourant.getDate()} ${datepicker.nomMois(
+                lundiCourant.getMonth()
+            )} ${lundiCourant.getFullYear()}`
         );
-    });
-});
+        Calendrier.ajusterSemaine(today);
+
+        this.udpateDate();
+    }
+
+    udpateDate() {
+        // Change le lundi de la semaine qui est affiché à chaque fois que le input date change
+        $("#datepicker").on("change", evt => {
+            let nouveauLundi = datepicker.getDateOfWeekDay(evt.target.value, 1);
+
+            $("#selection-semaine span").text(
+                `${datepicker.nomJoursSemaine(
+                    nouveauLundi.getDay()
+                )} ${nouveauLundi.getDate()} ${datepicker.nomMois(
+                    nouveauLundi.getMonth()
+                )} ${nouveauLundi.getFullYear()}`
+            );
+
+            let dateSelect = evt.target.value;
+            Calendrier.ajusterSemaine(evt.target.value);
+        });
+    }
+}
+new App();
