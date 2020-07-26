@@ -50,6 +50,7 @@ class App {
 
             let semainier = new Semainier();
             semainier.afficherEvent(new Date(nouveauLundi));
+            semainier.selectEvent();
         });
     }
 }

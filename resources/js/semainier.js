@@ -121,7 +121,8 @@ class Semainier {
      * Selection d'un événement du semainier
      */
     selectEvent() {
-        let jours = [],
+        let events = JSON.parse(localStorage.events),
+            jours = [],
             col = [];
 
         for (let i = 0; i <= 6; ++i) {
@@ -129,7 +130,52 @@ class Semainier {
             col.push($(`td.${jours[i]}`));
             col[i].each((index, element) => {
                 if ($(element).data("id")) {
-                    console.log(`event No.${$(element).data("id")}`);
+                    let event;
+                    $(events).each((index, eventChecked) => {
+                        if (eventChecked.id == $(element).data("id")) {
+                            event = eventChecked;
+                        }
+                    });
+
+                    $(element).on("click", evt => {
+                        console.log(event);
+                    });
+
+                    $(element).on("mouseenter", evt => {
+                        let startEvent = $(".start-event");
+                        $(startEvent).each((index, element) => {
+                            if ($(element).data("id") == event.id) {
+                                $(element).css(
+                                    "box-shadow",
+                                    "0px -9px 8px -3px rgba(0,0,0,0.7)"
+                                );
+                            }
+                        });
+                        let endEvent = $(".end-event");
+                        $(endEvent).each((index, element) => {
+                            if ($(element).data("id") == event.id) {
+                                $(element).css(
+                                    "box-shadow",
+                                    "0px 9px 8px -3px rgba(0,0,0,0.7)"
+                                );
+                            }
+                        });
+                    });
+
+                    $(element).on("mouseout", evt => {
+                        let startEvent = $(".start-event");
+                        $(startEvent).each((index, element) => {
+                            if ($(element).data("id") == event.id) {
+                                $(element).css("box-shadow", "");
+                            }
+                        });
+                        let endEvent = $(".end-event");
+                        $(endEvent).each((index, element) => {
+                            if ($(element).data("id") == event.id) {
+                                $(element).css("box-shadow", "");
+                            }
+                        });
+                    });
                 }
             });
         }

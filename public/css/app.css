@@ -11012,6 +11012,11 @@ td.heure {
   background-color: #6574cd;
   border-left: 1px black solid;
   border-right: 1px black solid;
+  border-bottom: 0px black solid;
+}
+
+.event:hover {
+  cursor: pointer;
 }
 
 .start-event {

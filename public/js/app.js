@@ -384,7 +384,8 @@ var Semainier = /*#__PURE__*/function () {
   }, {
     key: "selectEvent",
     value: function selectEvent() {
-      var jours = [],
+      var events = JSON.parse(localStorage.events),
+          jours = [],
           col = [];
 
       for (var i = 0; i <= 6; ++i) {
@@ -392,7 +393,43 @@ var Semainier = /*#__PURE__*/function () {
         col.push($("td.".concat(jours[i])));
         col[i].each(function (index, element) {
           if ($(element).data("id")) {
-            console.log("event No.".concat($(element).data("id")));
+            var event;
+            $(events).each(function (index, eventChecked) {
+              if (eventChecked.id == $(element).data("id")) {
+                event = eventChecked;
+              }
+            });
+            $(element).on("click", function (evt) {
+              console.log(event);
+            });
+            $(element).on("mouseenter", function (evt) {
+              var startEvent = $(".start-event");
+              $(startEvent).each(function (index, element) {
+                if ($(element).data("id") == event.id) {
+                  $(element).css("box-shadow", "0px -9px 8px -3px rgba(0,0,0,0.7)");
+                }
+              });
+              var endEvent = $(".end-event");
+              $(endEvent).each(function (index, element) {
+                if ($(element).data("id") == event.id) {
+                  $(element).css("box-shadow", "0px 9px 8px -3px rgba(0,0,0,0.7)");
+                }
+              });
+            });
+            $(element).on("mouseout", function (evt) {
+              var startEvent = $(".start-event");
+              $(startEvent).each(function (index, element) {
+                if ($(element).data("id") == event.id) {
+                  $(element).css("box-shadow", "");
+                }
+              });
+              var endEvent = $(".end-event");
+              $(endEvent).each(function (index, element) {
+                if ($(element).data("id") == event.id) {
+                  $(element).css("box-shadow", "");
+                }
+              });
+            });
           }
         });
       }
@@ -449,6 +486,7 @@ var App = /*#__PURE__*/function () {
         Semainier.ajusterSemaine(evt.target.value);
         var semainier = new Semainier();
         semainier.afficherEvent(new Date(nouveauLundi));
+        semainier.selectEvent();
       });
     }
   }]);
