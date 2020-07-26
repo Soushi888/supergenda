@@ -303,6 +303,9 @@ var Events = /*#__PURE__*/function () {
 }();
 
 var Semainier = /*#__PURE__*/function () {
+  /**
+   * Génère la structure du semainier
+   */
   function Semainier() {
     _classCallCheck(this, Semainier);
 
@@ -327,7 +330,11 @@ var Semainier = /*#__PURE__*/function () {
       tbody.append(tr);
       this.afficherEvent = this.afficherEvent.bind(this);
     }
-  } // Ajuste le numéro des jours à coté des nom des jours de la semaine dans le semainier
+  }
+  /**
+   * Ajuste le numéro des jours à coté des nom des jours de la semaine dans le semainier
+   * @param {Date} date 
+   */
 
 
   _createClass(Semainier, [{
@@ -401,7 +408,8 @@ var Semainier = /*#__PURE__*/function () {
             });
             $(element).on("click", function (evt) {
               console.log(event);
-            });
+            }); // Effet de hover lorsque l'utilisateur passe sa souris sur un événement
+
             $(element).on("mouseenter", function (evt) {
               var startEvent = $(".start-event");
               $(startEvent).each(function (index, element) {
@@ -456,7 +464,7 @@ var App = /*#__PURE__*/function () {
   function App() {
     _classCallCheck(this, App);
 
-    new Semainier();
+    this.semainier = new Semainier();
     Events.listeEvents();
     var events = new Events();
     events.getEvents().always(function (data) {
@@ -470,23 +478,25 @@ var App = /*#__PURE__*/function () {
     $("#selection-semaine span").text("".concat(datepicker.nomJoursSemaine(lundiCourant.getDay()), " ").concat(lundiCourant.getDate(), " ").concat(datepicker.nomMois(lundiCourant.getMonth()), " ").concat(lundiCourant.getFullYear()));
     Semainier.ajusterSemaine(today);
     this.udpateDate();
-    var semainier = new Semainier();
-    semainier.afficherEvent(new Date(lundiCourant));
-    semainier.selectEvent();
+    this.semainier.afficherEvent(new Date(lundiCourant));
+    this.semainier.selectEvent();
   }
 
   _createClass(App, [{
     key: "udpateDate",
     value: function udpateDate() {
+      var _this = this;
+
       // Change le lundi de la semaine qui est affiché à chaque fois que le input date change
       $("#datepicker").on("change", function (evt) {
         var nouveauLundi = datepicker.getDateOfWeekDay(evt.target.value, 1);
         $("#selection-semaine span").text("".concat(datepicker.nomJoursSemaine(nouveauLundi.getDay()), " ").concat(nouveauLundi.getDate(), " ").concat(datepicker.nomMois(nouveauLundi.getMonth()), " ").concat(nouveauLundi.getFullYear()));
         var dateSelect = evt.target.value;
         Semainier.ajusterSemaine(evt.target.value);
-        var semainier = new Semainier();
-        semainier.afficherEvent(new Date(nouveauLundi));
-        semainier.selectEvent();
+
+        _this.semainier.afficherEvent(new Date(nouveauLundi));
+
+        _this.semainier.selectEvent();
       });
     }
   }]);

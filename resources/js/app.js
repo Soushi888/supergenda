@@ -2,7 +2,7 @@
 
 class App {
     constructor() {
-        new Semainier();
+        this.semainier = new Semainier();
         Events.listeEvents();
 
         let events = new Events();
@@ -27,9 +27,8 @@ class App {
 
         this.udpateDate();
 
-        let semainier = new Semainier();
-        semainier.afficherEvent(new Date(lundiCourant));
-        semainier.selectEvent();
+        this.semainier.afficherEvent(new Date(lundiCourant));
+        this.semainier.selectEvent();
     }
 
     udpateDate() {
@@ -48,9 +47,8 @@ class App {
             let dateSelect = evt.target.value;
             Semainier.ajusterSemaine(evt.target.value);
 
-            let semainier = new Semainier();
-            semainier.afficherEvent(new Date(nouveauLundi));
-            semainier.selectEvent();
+            this.semainier.afficherEvent(new Date(nouveauLundi));
+            this.semainier.selectEvent();
         });
     }
 }

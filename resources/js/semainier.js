@@ -1,4 +1,7 @@
 class Semainier {
+    /**
+     * Génère la structure du semainier
+     */
     constructor() {
         // Génération du semainier
         for (let i = 0; i <= 47; ++i) {
@@ -30,7 +33,10 @@ class Semainier {
         }
     }
 
-    // Ajuste le numéro des jours à coté des nom des jours de la semaine dans le semainier
+    /**
+     * Ajuste le numéro des jours à coté des nom des jours de la semaine dans le semainier
+     * @param {Date} date 
+     */
     static ajusterSemaine(date) {
         let numLundi = $(".lundi span").text(
             datepicker.addZero(datepicker.getDateOfWeekDay(date, 1).getDate())
@@ -141,6 +147,7 @@ class Semainier {
                         console.log(event);
                     });
 
+                    // Effet de hover lorsque l'utilisateur passe sa souris sur un événement
                     $(element).on("mouseenter", evt => {
                         let startEvent = $(".start-event");
                         $(startEvent).each((index, element) => {
