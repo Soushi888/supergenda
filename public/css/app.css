@@ -10988,6 +10988,16 @@ table {
 
 .agenda th {
   padding: 0 1.5em;
+  border: solid 1px black;
+}
+
+.agenda th,
+.agenda td {
+  border-right: black 1px solid;
+}
+
+td.heure {
+  border-left: black 1px solid;
 }
 
 #modele {
