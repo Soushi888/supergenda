@@ -3,12 +3,10 @@
 class App {
     constructor() {
         this.semainier = new Semainier();
-        Events.listeEvents();
 
         let events = new Events();
-        events.getEvents().always(data => {
-            localStorage.events = JSON.stringify(data);
-        });
+        events.getEvents();
+        events.listerEvents();
 
         // initialise la date avec celle de la semaine courrante
         let today = new Date();

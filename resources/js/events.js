@@ -1,24 +1,30 @@
 class Events {
     constructor() {
         this.URL_EVENTS = "http://supergenda.perso/api/event";
+
+        this.getEvents = this.getEvents.bind(this);
     }
 
-    static listeEvents() {
-        const URL_EVENTS = "http://supergenda.perso/api/event";
-        $.get(URL_EVENTS, data => {
-            let list = $("#event_list ul");
-            $(data).each(index => {
-                let li = list.append(
-                    `<li>Id = ${data[index].id}, nom = ${data[index].name}, catégorie = ${data[index].categorie}, date début = ${data[index].date_debut}, date fin = ${data[index].date_fin}</li>`
-                );
-            });
+    /**
+     * Récupère les évenements du calendrier depuis l'API puis les enregistre dans le local storage
+     */
+    getEvents() {
+        $.get(this.URL_EVENTS, (data) => {
+            localStorage.events = JSON.stringify(data);
         });
     }
 
     /**
-     * Récupère les évenements du calendrier depuis l'API
+     * Récupère les événements stockés dans le local storage puis les liste
      */
-    getEvents() {
-        return $.get(this.URL_EVENTS);
+    listerEvents() {
+        let events = JSON.parse(localStorage.events);
+
+        let list = $("#event_list ul");
+        $(events).each(index => {
+            let li = list.append(
+                `<li>Id = ${events[index].id}, nom = ${events[index].name}, catégorie = ${events[index].categorie}, date début = ${events[index].date_debut}, date fin = ${events[index].date_fin}</li>`
+            );
+        });
     }
 }

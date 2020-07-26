@@ -275,26 +275,31 @@ var Events = /*#__PURE__*/function () {
     _classCallCheck(this, Events);
 
     this.URL_EVENTS = "http://supergenda.perso/api/event";
+    this.getEvents = this.getEvents.bind(this);
   }
+  /**
+   * Récupère les évenements du calendrier depuis l'API puis les enregistre dans le local storage
+   */
+
 
   _createClass(Events, [{
     key: "getEvents",
-
-    /**
-     * Récupère les évenements du calendrier depuis l'API
-     */
     value: function getEvents() {
-      return $.get(this.URL_EVENTS);
+      $.get(this.URL_EVENTS, function (data) {
+        localStorage.events = JSON.stringify(data);
+      });
     }
-  }], [{
-    key: "listeEvents",
-    value: function listeEvents() {
-      var URL_EVENTS = "http://supergenda.perso/api/event";
-      $.get(URL_EVENTS, function (data) {
-        var list = $("#event_list ul");
-        $(data).each(function (index) {
-          var li = list.append("<li>Id = ".concat(data[index].id, ", nom = ").concat(data[index].name, ", cat\xE9gorie = ").concat(data[index].categorie, ", date d\xE9but = ").concat(data[index].date_debut, ", date fin = ").concat(data[index].date_fin, "</li>"));
-        });
+    /**
+     * Récupère les événements stockés dans le local storage puis les liste
+     */
+
+  }, {
+    key: "listerEvents",
+    value: function listerEvents() {
+      var events = JSON.parse(localStorage.events);
+      var list = $("#event_list ul");
+      $(events).each(function (index) {
+        var li = list.append("<li>Id = ".concat(events[index].id, ", nom = ").concat(events[index].name, ", cat\xE9gorie = ").concat(events[index].categorie, ", date d\xE9but = ").concat(events[index].date_debut, ", date fin = ").concat(events[index].date_fin, "</li>"));
       });
     }
   }]);
@@ -465,11 +470,9 @@ var App = /*#__PURE__*/function () {
     _classCallCheck(this, App);
 
     this.semainier = new Semainier();
-    Events.listeEvents();
     var events = new Events();
-    events.getEvents().always(function (data) {
-      localStorage.events = JSON.stringify(data);
-    }); // initialise la date avec celle de la semaine courrante
+    events.getEvents();
+    events.listerEvents(); // initialise la date avec celle de la semaine courrante
 
     var today = new Date();
     today.setDate(today.getDate() - 1);
