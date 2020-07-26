@@ -353,6 +353,7 @@ var Semainier = /*#__PURE__*/function () {
       $(events).each(function (index, element) {
         var date_debut = new Date(element.date_debut);
         var date_fin = new Date(element.date_fin);
+        var id = element.id;
         var jours = datepicker.nomJoursSemaine(date_debut.getDay());
         var heure_debut = "".concat(datepicker.addZero(date_debut.getHours()), ":").concat(datepicker.addZero(date_debut.getMinutes()));
         var heure_fin = "".concat(datepicker.addZero(date_fin.getHours()), ":").concat(datepicker.addZero(date_fin.getMinutes()));
@@ -360,18 +361,41 @@ var Semainier = /*#__PURE__*/function () {
           if ($(element).data("houre") == heure_debut) {
             $(element).addClass("event");
             $(element).addClass("start-event");
+            $(element).data("id", id);
           }
 
           if ($(element).data("houre") == heure_fin) {
             $(element).parent().prev().children(".".concat(jours)).addClass("event");
             $(element).parent().prev().children(".".concat(jours)).addClass("end-event");
+            $(element).data("id", id);
           }
 
           if ($(element).data("houre") > heure_debut && $(element).data("houre") < heure_fin) {
             $(element).addClass("event");
+            $(element).data("id", id);
           }
         });
       });
+    }
+    /**
+     * Selection d'un événement du semainier
+     */
+
+  }, {
+    key: "selectEvent",
+    value: function selectEvent() {
+      var jours = [],
+          col = [];
+
+      for (var i = 0; i <= 6; ++i) {
+        jours.push(datepicker.nomJoursSemaine(i));
+        col.push($("td.".concat(jours[i])));
+        col[i].each(function (index, element) {
+          if ($(element).data("id")) {
+            console.log("event No.".concat($(element).data("id")));
+          }
+        });
+      }
     }
   }], [{
     key: "ajusterSemaine",
@@ -403,6 +427,7 @@ var App = /*#__PURE__*/function () {
     }); // initialise la date avec celle de la semaine courrante
 
     var today = new Date();
+    today.setDate(today.getDate() - 1);
     var lundiCourant = datepicker.getDateOfWeekDay(today, 1);
     $("#datepicker").val(today.getDate());
     $("#selection-semaine span").text("".concat(datepicker.nomJoursSemaine(lundiCourant.getDay()), " ").concat(lundiCourant.getDate(), " ").concat(datepicker.nomMois(lundiCourant.getMonth()), " ").concat(lundiCourant.getFullYear()));
@@ -410,6 +435,7 @@ var App = /*#__PURE__*/function () {
     this.udpateDate();
     var semainier = new Semainier();
     semainier.afficherEvent(new Date(lundiCourant));
+    semainier.selectEvent();
   }
 
   _createClass(App, [{

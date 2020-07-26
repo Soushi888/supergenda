@@ -12,6 +12,7 @@ class App {
 
         // initialise la date avec celle de la semaine courrante
         let today = new Date();
+        today.setDate(today.getDate() - 1);
         let lundiCourant = datepicker.getDateOfWeekDay(today, 1);
 
         $("#datepicker").val(today.getDate());
@@ -28,6 +29,7 @@ class App {
 
         let semainier = new Semainier();
         semainier.afficherEvent(new Date(lundiCourant));
+        semainier.selectEvent();
     }
 
     udpateDate() {

@@ -54,6 +54,7 @@ class Semainier {
             datepicker.addZero(datepicker.getDateOfWeekDay(date, 0).getDate())
         );
     }
+
     /**
      * Affiche dans le semainier les événements stockés dans le localStorage d'une semaine en particulier
      * @param {Date} monday
@@ -76,6 +77,7 @@ class Semainier {
         $(events).each((index, element) => {
             let date_debut = new Date(element.date_debut);
             let date_fin = new Date(element.date_fin);
+            let id = element.id;
 
             let jours = datepicker.nomJoursSemaine(date_debut.getDay());
             let heure_debut = `${datepicker.addZero(
@@ -89,6 +91,7 @@ class Semainier {
                 if ($(element).data("houre") == heure_debut) {
                     $(element).addClass("event");
                     $(element).addClass("start-event");
+                    $(element).data("id", id);
                 }
                 if ($(element).data("houre") == heure_fin) {
                     $(element)
@@ -101,14 +104,34 @@ class Semainier {
                         .prev()
                         .children(`.${jours}`)
                         .addClass("end-event");
+                    $(element).data("id", id);
                 }
                 if (
                     $(element).data("houre") > heure_debut &&
                     $(element).data("houre") < heure_fin
                 ) {
                     $(element).addClass("event");
+                    $(element).data("id", id);
                 }
             });
         });
+    }
+
+    /**
+     * Selection d'un événement du semainier
+     */
+    selectEvent() {
+        let jours = [],
+            col = [];
+
+        for (let i = 0; i <= 6; ++i) {
+            jours.push(datepicker.nomJoursSemaine(i));
+            col.push($(`td.${jours[i]}`));
+            col[i].each((index, element) => {
+                if ($(element).data("id")) {
+                    console.log(`event No.${$(element).data("id")}`);
+                }
+            });
+        }
     }
 }
