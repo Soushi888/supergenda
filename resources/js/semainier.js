@@ -35,7 +35,7 @@ class Semainier {
 
     /**
      * Ajuste le numéro des jours à coté des nom des jours de la semaine dans le semainier
-     * @param {Date} date 
+     * @param {Date} date
      */
     static ajusterSemaine(date) {
         let numLundi = $(".lundi span").text(
@@ -189,8 +189,29 @@ class Semainier {
         }
     }
 
-    afficherEvent() {
+    /**
+     * Affichage d'un événment selectionné dans un modal
+     * @param {JSON} event 
+     */
+    afficherEvent(event) {
         Modal.showModal();
-    }
+        let modalContent = $(".modal-content");
 
+        let jours = new Date(event.date_debut);
+        let joursFormate = `${datepicker.nomJoursSemaine(jours.getDay()
+        )} ${datepicker.addZero(jours.getDate())} ${datepicker.nomMois(jours.getMonth())} ${jours.getFullYear()}`;
+        let heure_debut = `${datepicker.addZero(
+            new Date(event.date_debut).getHours()
+        )}:${datepicker.addZero(new Date(event.date_debut).getMinutes())}`;
+        let heure_fin = `${datepicker.addZero(
+            new Date(event.date_fin).getHours()
+        )}:${datepicker.addZero(new Date(event.date_fin).getMinutes())}`;
+
+        modalContent.append(`
+        <h1>${event.name}</h1>
+        <p>Journée = ${joursFormate}</p>
+        <p>Heure du début = ${heure_debut}</p>
+        <p>Heure du début = ${heure_fin}</p>
+        `);
+    }
 }

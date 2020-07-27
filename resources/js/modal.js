@@ -3,7 +3,6 @@ class Modal {
         let modalElement = $("body").append(`<div class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
-                <h1>Hello, I am a modal!</h1>
             </div>
         </div>`);
     }
@@ -13,19 +12,12 @@ class Modal {
         let closeButton = $(".close-button");
 
         modal.addClass("show-modal");
-        console.log(modal);
+        closeButton.on("click", Modal.closeModal);
+    }
 
-        function toggleModal() {
-            modal.toggleClass("show-modal");
-        }
-
-        function windowOnClick(event) {
-            if (event.target === modal) {
-                toggleModal();
-            }
-        }
-
-        closeButton.on("click", toggleModal);
-        window.addEventListener("click", windowOnClick);
+    static closeModal() {
+        let modal = $(".modal");
+        modal.removeClass("show-modal");
+        $(".modal-content").html("<span class='close-button'>&times;</span>");
     }
 }

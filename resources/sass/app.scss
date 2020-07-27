@@ -1,14 +1,14 @@
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Nunito");
 
-// Modal
-@import "modal.scss";
-
 // Variables
 @import "variables";
 
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
+
+// Modal
+@import "modal.scss";
 
 html,
 body {

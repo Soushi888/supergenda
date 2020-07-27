@@ -45,7 +45,7 @@ var Modal = /*#__PURE__*/function () {
   function Modal() {
     _classCallCheck(this, Modal);
 
-    var modalElement = $("body").append("<div class=\"modal\">\n            <div class=\"modal-content\">\n                <span class=\"close-button\">&times;</span>\n                <h1>Hello, I am a modal!</h1>\n            </div>\n        </div>");
+    var modalElement = $("body").append("<div class=\"modal\">\n            <div class=\"modal-content\">\n                <span class=\"close-button\">&times;</span>\n            </div>\n        </div>");
   }
 
   _createClass(Modal, null, [{
@@ -54,20 +54,14 @@ var Modal = /*#__PURE__*/function () {
       var modal = $(".modal");
       var closeButton = $(".close-button");
       modal.addClass("show-modal");
-      console.log(modal);
-
-      function toggleModal() {
-        modal.toggleClass("show-modal");
-      }
-
-      function windowOnClick(event) {
-        if (event.target === modal) {
-          toggleModal();
-        }
-      }
-
-      closeButton.on("click", toggleModal);
-      window.addEventListener("click", windowOnClick);
+      closeButton.on("click", Modal.closeModal);
+    }
+  }, {
+    key: "closeModal",
+    value: function closeModal() {
+      var modal = $(".modal");
+      modal.removeClass("show-modal");
+      $(".modal-content").html("<span class='close-button'>&times;</span>");
     }
   }]);
 
@@ -90,7 +84,7 @@ var datepicker = /*#__PURE__*/function () {
 
     /**
      * Si le nombre donné en paramètre (qu'il soit sous forme d'entier ou de caractère) est inclusivement compris entre 1 et 9, ajoute un zéro devant.
-     * @param {*} number
+     * @param {number} number
      * @returns {string}
      */
     value: function addZero(number) {
@@ -371,7 +365,7 @@ var Semainier = /*#__PURE__*/function () {
   }
   /**
    * Ajuste le numéro des jours à coté des nom des jours de la semaine dans le semainier
-   * @param {Date} date 
+   * @param {Date} date
    */
 
 
@@ -484,10 +478,21 @@ var Semainier = /*#__PURE__*/function () {
         });
       }
     }
+    /**
+     * Affichage d'un événment selectionné dans un modal
+     * @param {JSON} event 
+     */
+
   }, {
     key: "afficherEvent",
-    value: function afficherEvent() {
+    value: function afficherEvent(event) {
       Modal.showModal();
+      var modalContent = $(".modal-content");
+      var jours = new Date(event.date_debut);
+      var joursFormate = "".concat(datepicker.nomJoursSemaine(jours.getDay()), " ").concat(datepicker.addZero(jours.getDate()), " ").concat(datepicker.nomMois(jours.getMonth()), " ").concat(jours.getFullYear());
+      var heure_debut = "".concat(datepicker.addZero(new Date(event.date_debut).getHours()), ":").concat(datepicker.addZero(new Date(event.date_debut).getMinutes()));
+      var heure_fin = "".concat(datepicker.addZero(new Date(event.date_fin).getHours()), ":").concat(datepicker.addZero(new Date(event.date_fin).getMinutes()));
+      modalContent.append("\n        <h1>".concat(event.name, "</h1>\n        <p>Journ\xE9e = ").concat(joursFormate, "</p>\n        <p>Heure du d\xE9but = ").concat(heure_debut, "</p>\n        <p>Heure du d\xE9but = ").concat(heure_fin, "</p>\n        "));
     }
   }], [{
     key: "ajusterSemaine",

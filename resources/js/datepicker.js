@@ -6,7 +6,7 @@
 class datepicker {
     /**
      * Si le nombre donné en paramètre (qu'il soit sous forme d'entier ou de caractère) est inclusivement compris entre 1 et 9, ajoute un zéro devant.
-     * @param {*} number
+     * @param {number} number
      * @returns {string}
      */
     static addZero(number) {
