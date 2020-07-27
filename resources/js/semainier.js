@@ -29,7 +29,7 @@ class Semainier {
 
             tbody.append(tr);
 
-            this.afficherEvent = this.afficherEvent.bind(this);
+            this.afficherEvents = this.afficherEvents.bind(this);
         }
     }
 
@@ -65,7 +65,7 @@ class Semainier {
      * Affiche dans le semainier les événements stockés dans le localStorage d'une semaine en particulier
      * @param {Date} monday
      */
-    afficherEvent(monday) {
+    afficherEvents(monday) {
         let year = monday.getFullYear();
         let week = monday.getWeek();
 
@@ -145,6 +145,7 @@ class Semainier {
 
                     $(element).on("click", evt => {
                         console.log(event);
+                        this.afficherEvent(event);
                     });
 
                     // Effet de hover lorsque l'utilisateur passe sa souris sur un événement
@@ -187,4 +188,9 @@ class Semainier {
             });
         }
     }
+
+    afficherEvent() {
+        Modal.showModal();
+    }
+
 }

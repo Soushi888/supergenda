@@ -3,6 +3,7 @@
 class App {
     constructor() {
         this.semainier = new Semainier();
+        this.modal = new Modal();
 
         let events = new Events();
         events.getEvents();
@@ -25,7 +26,7 @@ class App {
 
         this.udpateDate();
 
-        this.semainier.afficherEvent(new Date(lundiCourant));
+        this.semainier.afficherEvents(new Date(lundiCourant));
         this.semainier.selectEvent();
     }
 
@@ -45,7 +46,7 @@ class App {
             let dateSelect = evt.target.value;
             Semainier.ajusterSemaine(evt.target.value);
 
-            this.semainier.afficherEvent(new Date(nouveauLundi));
+            this.semainier.afficherEvents(new Date(nouveauLundi));
             this.semainier.selectEvent();
         });
     }

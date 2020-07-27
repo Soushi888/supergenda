@@ -41,6 +41,39 @@ Date.prototype.getWeek = function (dowOffset) {
   return weeknum;
 };
 
+var Modal = /*#__PURE__*/function () {
+  function Modal() {
+    _classCallCheck(this, Modal);
+
+    var modalElement = $("body").append("<div class=\"modal\">\n            <div class=\"modal-content\">\n                <span class=\"close-button\">&times;</span>\n                <h1>Hello, I am a modal!</h1>\n            </div>\n        </div>");
+  }
+
+  _createClass(Modal, null, [{
+    key: "showModal",
+    value: function showModal() {
+      var modal = $(".modal");
+      var closeButton = $(".close-button");
+      modal.addClass("show-modal");
+      console.log(modal);
+
+      function toggleModal() {
+        modal.toggleClass("show-modal");
+      }
+
+      function windowOnClick(event) {
+        if (event.target === modal) {
+          toggleModal();
+        }
+      }
+
+      closeButton.on("click", toggleModal);
+      window.addEventListener("click", windowOnClick);
+    }
+  }]);
+
+  return Modal;
+}();
+
 "use strict";
 /**
  * Classe contenant des methodes statiques aidant à traiter les dates
@@ -333,7 +366,7 @@ var Semainier = /*#__PURE__*/function () {
 
       tdHeure.css("border-right", "1px solid black");
       tbody.append(tr);
-      this.afficherEvent = this.afficherEvent.bind(this);
+      this.afficherEvents = this.afficherEvents.bind(this);
     }
   }
   /**
@@ -343,13 +376,13 @@ var Semainier = /*#__PURE__*/function () {
 
 
   _createClass(Semainier, [{
-    key: "afficherEvent",
+    key: "afficherEvents",
 
     /**
      * Affiche dans le semainier les événements stockés dans le localStorage d'une semaine en particulier
      * @param {Date} monday
      */
-    value: function afficherEvent(monday) {
+    value: function afficherEvents(monday) {
       var year = monday.getFullYear();
       var week = monday.getWeek();
       $("td").removeClass("event start-event end-event");
@@ -396,6 +429,8 @@ var Semainier = /*#__PURE__*/function () {
   }, {
     key: "selectEvent",
     value: function selectEvent() {
+      var _this = this;
+
       var events = JSON.parse(localStorage.events),
           jours = [],
           col = [];
@@ -413,6 +448,8 @@ var Semainier = /*#__PURE__*/function () {
             });
             $(element).on("click", function (evt) {
               console.log(event);
+
+              _this.afficherEvent(event);
             }); // Effet de hover lorsque l'utilisateur passe sa souris sur un événement
 
             $(element).on("mouseenter", function (evt) {
@@ -447,6 +484,11 @@ var Semainier = /*#__PURE__*/function () {
         });
       }
     }
+  }, {
+    key: "afficherEvent",
+    value: function afficherEvent() {
+      Modal.showModal();
+    }
   }], [{
     key: "ajusterSemaine",
     value: function ajusterSemaine(date) {
@@ -470,6 +512,7 @@ var App = /*#__PURE__*/function () {
     _classCallCheck(this, App);
 
     this.semainier = new Semainier();
+    this.modal = new Modal();
     var events = new Events();
     events.getEvents();
     events.listerEvents(); // initialise la date avec celle de la semaine courrante
@@ -481,14 +524,14 @@ var App = /*#__PURE__*/function () {
     $("#selection-semaine span").text("".concat(datepicker.nomJoursSemaine(lundiCourant.getDay()), " ").concat(lundiCourant.getDate(), " ").concat(datepicker.nomMois(lundiCourant.getMonth()), " ").concat(lundiCourant.getFullYear()));
     Semainier.ajusterSemaine(today);
     this.udpateDate();
-    this.semainier.afficherEvent(new Date(lundiCourant));
+    this.semainier.afficherEvents(new Date(lundiCourant));
     this.semainier.selectEvent();
   }
 
   _createClass(App, [{
     key: "udpateDate",
     value: function udpateDate() {
-      var _this = this;
+      var _this2 = this;
 
       // Change le lundi de la semaine qui est affiché à chaque fois que le input date change
       $("#datepicker").on("change", function (evt) {
@@ -497,9 +540,9 @@ var App = /*#__PURE__*/function () {
         var dateSelect = evt.target.value;
         Semainier.ajusterSemaine(evt.target.value);
 
-        _this.semainier.afficherEvent(new Date(nouveauLundi));
+        _this2.semainier.afficherEvents(new Date(nouveauLundi));
 
-        _this.semainier.selectEvent();
+        _this2.semainier.selectEvent();
       });
     }
   }]);
