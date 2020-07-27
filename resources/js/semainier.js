@@ -191,15 +191,18 @@ class Semainier {
 
     /**
      * Affichage d'un événment selectionné dans un modal
-     * @param {JSON} event 
+     * @param {JSON} event
      */
     afficherEvent(event) {
         Modal.showModal();
         let modalContent = $(".modal-content");
 
         let jours = new Date(event.date_debut);
-        let joursFormate = `${datepicker.nomJoursSemaine(jours.getDay()
-        )} ${datepicker.addZero(jours.getDate())} ${datepicker.nomMois(jours.getMonth())} ${jours.getFullYear()}`;
+        let joursFormate = `${datepicker.nomJoursSemaine(
+            jours.getDay()
+        )} ${datepicker.addZero(jours.getDate())} ${datepicker.nomMois(
+            jours.getMonth()
+        )} ${jours.getFullYear()}`;
         let heure_debut = `${datepicker.addZero(
             new Date(event.date_debut).getHours()
         )}:${datepicker.addZero(new Date(event.date_debut).getMinutes())}`;
@@ -208,10 +211,44 @@ class Semainier {
         )}:${datepicker.addZero(new Date(event.date_fin).getMinutes())}`;
 
         modalContent.append(`
+        <button id="modifier-event">Modifier</button>
         <h1>${event.name}</h1>
+        <p>Catégorie = ${event.categorie}</p>
         <p>Journée = ${joursFormate}</p>
         <p>Heure du début = ${heure_debut}</p>
         <p>Heure du début = ${heure_fin}</p>
         `);
+
+        $("#modifier-event").on("click", () => {
+            console.log("modification de l'événement");
+
+            let date = new Date(event.date_debut);
+            let month = datepicker.addZero(date.getMonth() + 1);
+            let day = datepicker.addZero(date.getDate());
+
+            modalContent.html(`
+            <label for="name">Nom : <input type="text" id="name" value="${
+                event.name
+            }"></label>
+            <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
+                event.categorie
+            }"></label>
+            <label for="date">Date : <input type="date" id="date" value="${date.getFullYear()}-${month}-${day}"></label>
+            <label for="heure-debut">Heure du début : <select id="heure-debut"></select></label>
+            <label for="heure-fin">Heure de fin : <select id="heure-fin"></select></label>
+
+        <button id="modifier-event">Accepter</button>
+            `);
+
+            let eventUpdated = {};
+            eventUpdated.name = $("#name").val();
+            eventUpdated.categorie = $("#categorie").val();
+
+            
+
+            $("#modifier-event").on("click", () => {
+                console.log("Envoi ajax PUT");
+            });
+        });
     }
 }

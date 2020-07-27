@@ -47,6 +47,10 @@ var Modal = /*#__PURE__*/function () {
 
     var modalElement = $("body").append("<div class=\"modal\">\n            <div class=\"modal-content\">\n                <span class=\"close-button\">&times;</span>\n            </div>\n        </div>");
   }
+  /**
+   * Ouverture d'une fenêtre modal
+   */
+
 
   _createClass(Modal, null, [{
     key: "showModal",
@@ -55,7 +59,21 @@ var Modal = /*#__PURE__*/function () {
       var closeButton = $(".close-button");
       modal.addClass("show-modal");
       closeButton.on("click", Modal.closeModal);
+      $("body").on("keydown", function (evt) {
+        if (evt.key === "Escape") {
+          Modal.closeModal();
+        }
+      });
+      modal.on("click", function (evt) {
+        if (!$(evt.target).hasClass("modal-content")) {
+          Modal.closeModal();
+        }
+      });
     }
+    /**
+     * Fermeture d'une fenêtre modal
+     */
+
   }, {
     key: "closeModal",
     value: function closeModal() {
@@ -301,7 +319,7 @@ var Events = /*#__PURE__*/function () {
   function Events() {
     _classCallCheck(this, Events);
 
-    this.URL_EVENTS = "http://supergenda.perso/api/event";
+    this.URL_EVENTS = "http://supergenda.perso/api/event/";
     this.getEvents = this.getEvents.bind(this);
   }
   /**
@@ -316,17 +334,21 @@ var Events = /*#__PURE__*/function () {
         localStorage.events = JSON.stringify(data);
       });
     }
-    /**
-     * Récupère les événements stockés dans le local storage puis les liste
-     */
-
   }, {
-    key: "listerEvents",
-    value: function listerEvents() {
-      var events = JSON.parse(localStorage.events);
-      var list = $("#event_list ul");
-      $(events).each(function (index) {
-        var li = list.append("<li>Id = ".concat(events[index].id, ", nom = ").concat(events[index].name, ", cat\xE9gorie = ").concat(events[index].categorie, ", date d\xE9but = ").concat(events[index].date_debut, ", date fin = ").concat(events[index].date_fin, "</li>"));
+    key: "updateEvent",
+    value: function updateEvent(event, eventUpdated) {
+      $.ajax({
+        url: "".concat(this.URL_EVENTS).concat(event.id),
+        type: "PUT",
+        dataType: "json",
+        data: {
+          name: eventUpdated.name,
+          date_debut: eventUpdated.date_debut,
+          date_fin: eventUpdated.date_fin
+        },
+        success: function success() {
+          console.log("Mise à jours réalisée avec succès !");
+        }
       });
     }
   }]);
@@ -480,7 +502,7 @@ var Semainier = /*#__PURE__*/function () {
     }
     /**
      * Affichage d'un événment selectionné dans un modal
-     * @param {JSON} event 
+     * @param {JSON} event
      */
 
   }, {
@@ -492,7 +514,20 @@ var Semainier = /*#__PURE__*/function () {
       var joursFormate = "".concat(datepicker.nomJoursSemaine(jours.getDay()), " ").concat(datepicker.addZero(jours.getDate()), " ").concat(datepicker.nomMois(jours.getMonth()), " ").concat(jours.getFullYear());
       var heure_debut = "".concat(datepicker.addZero(new Date(event.date_debut).getHours()), ":").concat(datepicker.addZero(new Date(event.date_debut).getMinutes()));
       var heure_fin = "".concat(datepicker.addZero(new Date(event.date_fin).getHours()), ":").concat(datepicker.addZero(new Date(event.date_fin).getMinutes()));
-      modalContent.append("\n        <h1>".concat(event.name, "</h1>\n        <p>Journ\xE9e = ").concat(joursFormate, "</p>\n        <p>Heure du d\xE9but = ").concat(heure_debut, "</p>\n        <p>Heure du d\xE9but = ").concat(heure_fin, "</p>\n        "));
+      modalContent.append("\n        <button id=\"modifier-event\">Modifier</button>\n        <h1>".concat(event.name, "</h1>\n        <p>Cat\xE9gorie = ").concat(event.categorie, "</p>\n        <p>Journ\xE9e = ").concat(joursFormate, "</p>\n        <p>Heure du d\xE9but = ").concat(heure_debut, "</p>\n        <p>Heure du d\xE9but = ").concat(heure_fin, "</p>\n        "));
+      $("#modifier-event").on("click", function () {
+        console.log("modification de l'événement");
+        var date = new Date(event.date_debut);
+        var month = datepicker.addZero(date.getMonth() + 1);
+        var day = datepicker.addZero(date.getDate());
+        modalContent.html("\n            <label for=\"name\">Nom : <input type=\"text\" id=\"name\" value=\"".concat(event.name, "\"></label>\n            <label for=\"categorie\">Cat\xE9gorie : <input type=\"text\" id=\"categorie\" value=\"").concat(event.categorie, "\"></label>\n            <label for=\"date\">Date : <input type=\"date\" id=\"date\" value=\"").concat(date.getFullYear(), "-").concat(month, "-").concat(day, "\"></label>\n            <label for=\"heure-debut\">Heure du d\xE9but : <select id=\"heure-debut\"></select></label>\n            <label for=\"heure-fin\">Heure de fin : <select id=\"heure-fin\"></select></label>\n\n        <button id=\"modifier-event\">Accepter</button>\n            "));
+        var eventUpdated = {};
+        eventUpdated.name = $("#name").val();
+        eventUpdated.categorie = $("#categorie").val();
+        $("#modifier-event").on("click", function () {
+          console.log("Envoi ajax PUT");
+        });
+      });
     }
   }], [{
     key: "ajusterSemaine",
@@ -519,8 +554,7 @@ var App = /*#__PURE__*/function () {
     this.semainier = new Semainier();
     this.modal = new Modal();
     var events = new Events();
-    events.getEvents();
-    events.listerEvents(); // initialise la date avec celle de la semaine courrante
+    events.getEvents(); // initialise la date avec celle de la semaine courrante
 
     var today = new Date();
     today.setDate(today.getDate() - 1);
@@ -546,8 +580,6 @@ var App = /*#__PURE__*/function () {
         Semainier.ajusterSemaine(evt.target.value);
 
         _this2.semainier.afficherEvents(new Date(nouveauLundi));
-
-        _this2.semainier.selectEvent();
       });
     }
   }]);

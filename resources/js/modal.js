@@ -7,14 +7,32 @@ class Modal {
         </div>`);
     }
 
+    /**
+     * Ouverture d'une fenêtre modal
+     */
     static showModal() {
         let modal = $(".modal");
         let closeButton = $(".close-button");
 
         modal.addClass("show-modal");
         closeButton.on("click", Modal.closeModal);
+
+        $("body").on("keydown", evt => {
+            if (evt.key === "Escape") {
+                Modal.closeModal();
+            }
+        });
+
+        modal.on("click", evt => {
+            if (!$(evt.target).hasClass("modal-content")) {
+                Modal.closeModal();
+            }
+        });
     }
 
+    /**
+     * Fermeture d'une fenêtre modal
+     */
     static closeModal() {
         let modal = $(".modal");
         modal.removeClass("show-modal");

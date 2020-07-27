@@ -7,7 +7,6 @@ class App {
 
         let events = new Events();
         events.getEvents();
-        events.listerEvents();
 
         // initialise la date avec celle de la semaine courrante
         let today = new Date();
@@ -47,7 +46,6 @@ class App {
             Semainier.ajusterSemaine(evt.target.value);
 
             this.semainier.afficherEvents(new Date(nouveauLundi));
-            this.semainier.selectEvent();
         });
     }
 }
