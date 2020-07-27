@@ -64,7 +64,24 @@ class Semainier {
 
             tbody.append(tr);
 
-            
+            // initialise la date avec celle de la semaine courrante
+            let today = new Date();
+            today.setDate(today.getDate() - 1);
+            let lundiCourant = datepicker.getDateOfWeekDay(today, 1);
+
+            $("#datepicker").val(today.getDate());
+            $("#selection-semaine span").text(
+                `${datepicker.nomJoursSemaine(
+                    lundiCourant.getDay()
+                )} ${lundiCourant.getDate()} ${datepicker.nomMois(
+                    lundiCourant.getMonth()
+                )} ${lundiCourant.getFullYear()}`
+            );
+            this.ajusterSemaine(today);
+
+            this.udpateDate();
+
+            this.afficherEvents(new Date(lundiCourant));
 
             this.afficherEvents = this.afficherEvents.bind(this);
         }

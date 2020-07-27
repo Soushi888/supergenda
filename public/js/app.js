@@ -383,7 +383,16 @@ var Semainier = /*#__PURE__*/function () {
       }
 
       tdHeure.css("border-right", "1px solid black");
-      tbody.append(tr);
+      tbody.append(tr); // initialise la date avec celle de la semaine courrante
+
+      var today = new Date();
+      today.setDate(today.getDate() - 1);
+      var lundiCourant = datepicker.getDateOfWeekDay(today, 1);
+      $("#datepicker").val(today.getDate());
+      $("#selection-semaine span").text("".concat(datepicker.nomJoursSemaine(lundiCourant.getDay()), " ").concat(lundiCourant.getDate(), " ").concat(datepicker.nomMois(lundiCourant.getMonth()), " ").concat(lundiCourant.getFullYear()));
+      this.ajusterSemaine(today);
+      this.udpateDate();
+      this.afficherEvents(new Date(lundiCourant));
       this.afficherEvents = this.afficherEvents.bind(this);
     }
   }
@@ -572,16 +581,7 @@ var App = function App() {
   this.semainier = new Semainier();
   this.modal = new Modal();
   var events = new Events();
-  events.getEvents(); // initialise la date avec celle de la semaine courrante
-
-  var today = new Date();
-  today.setDate(today.getDate() - 1);
-  var lundiCourant = datepicker.getDateOfWeekDay(today, 1);
-  $("#datepicker").val(today.getDate());
-  $("#selection-semaine span").text("".concat(datepicker.nomJoursSemaine(lundiCourant.getDay()), " ").concat(lundiCourant.getDate(), " ").concat(datepicker.nomMois(lundiCourant.getMonth()), " ").concat(lundiCourant.getFullYear()));
-  this.semainier.ajusterSemaine(today);
-  this.semainier.udpateDate();
-  this.semainier.afficherEvents(new Date(lundiCourant));
+  events.getEvents();
   this.semainier.selectEvent();
 };
 
