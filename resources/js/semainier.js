@@ -63,32 +63,34 @@ class Semainier {
             tdHeure.css("border-right", "1px solid black");
 
             tbody.append(tr);
-
-            // initialise la date avec celle de la semaine courrante
-            let today = new Date();
-            today.setDate(today.getDate() - 1);
-            let lundiCourant = datepicker.getDateOfWeekDay(today, 1);
-
-            $("#datepicker").val(today.getDate());
-            $("#selection-semaine span").text(
-                `${datepicker.nomJoursSemaine(
-                    lundiCourant.getDay()
-                )} ${lundiCourant.getDate()} ${datepicker.nomMois(
-                    lundiCourant.getMonth()
-                )} ${lundiCourant.getFullYear()}`
-            );
-            this.ajusterSemaine(today);
-
-            this.udpateDate();
-
-            this.afficherEvents(new Date(lundiCourant));
-
-            this.afficherEvents = this.afficherEvents.bind(this);
         }
+        // initialise la date avec celle de la semaine courrante
+        let today = new Date();
+        today.setDate(today.getDate() - 1);
+        let lundiCourant = datepicker.getDateOfWeekDay(today, 1);
+
+        $("#datepicker").val(today.getDate());
+        $("#selection-semaine span").text(
+            `${datepicker.nomJoursSemaine(
+                lundiCourant.getDay()
+            )} ${lundiCourant.getDate()} ${datepicker.nomMois(
+                lundiCourant.getMonth()
+            )} ${lundiCourant.getFullYear()}`
+        );
+        this.ajusterSemaine(today);
+
+        this.udpateDate();
+
+        this.afficherEvents(new Date(lundiCourant));
+        this.selectEvent();
+
+        this.afficherEvents = this.afficherEvents.bind(this);
     }
 
+    /**
+     * Change le lundi de la semaine qui est affiché à chaque fois que le input date change
+     */
     udpateDate() {
-        // Change le lundi de la semaine qui est affiché à chaque fois que le input date change
         $("#datepicker").on("change", evt => {
             let nouveauLundi = datepicker.getDateOfWeekDay(evt.target.value, 1);
 
@@ -146,6 +148,7 @@ class Semainier {
         $("td").removeClass("event start-event end-event");
 
         let events = [];
+
         $(JSON.parse(localStorage.events)).each((index, element) => {
             let yearEvent = new Date(element.date_debut).getFullYear();
             let weekEvent = new Date(element.date_debut).getWeek();
@@ -264,7 +267,7 @@ class Semainier {
     }
 
     /**
-     * Affichage d'un événment selectionné dans un modal
+     * Affichage d'un événment selectionné dans un modal et interface de modification de celui-ci.
      * @param {JSON} event
      */
     afficherEvent(event) {
@@ -295,33 +298,42 @@ class Semainier {
 
         // Modification de l'événement
         $("#modifier-event").on("click", () => {
-            console.log("modification de l'événement");
+            this.updateEvent(event);
+        });
+    }
 
-            let date = new Date(event.date_debut);
-            let month = datepicker.addZero(date.getMonth() + 1);
-            let day = datepicker.addZero(date.getDate());
+    updateEvent(event) {
+        let modalContent = $(".modal-content");
 
-            modalContent.html(`
-            <label for="name">Nom : <input type="text" id="name" value="${
-                event.name
-            }"></label>
-            <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
-                event.categorie
-            }"></label>
-            <label for="date">Date : <input type="date" id="date" value="${date.getFullYear()}-${month}-${day}"></label>
-            <label for="heure-debut">Heure du début : <select id="heure-debut"></select></label>
-            <label for="heure-fin">Heure de fin : <select id="heure-fin"></select></label>
+        console.log("modification de l'événement");
+
+        let date = new Date(event.date_debut);
+        let month = datepicker.addZero(date.getMonth() + 1);
+        let day = datepicker.addZero(date.getDate());
+
+        let optionsHeures = "";
+
+        Modal.resetModal();
+        modalContent.append(`
+        <label for="name">Nom : <input type="text" id="name" value="${
+            event.name
+        }"></label>
+        <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
+            event.categorie
+        }"></label>
+        <label for="date">Date : <input type="date" id="date" value="${date.getFullYear()}-${month}-${day}"></label>
+        <label for="heure-debut">Heure du début : <select id="heure-debut">${optionsHeures}</select></label>
+        <label for="heure-fin">Heure de fin : <select id="heure-fin"></select></label>
 
         <button id="modifier-event">Accepter</button>
-            `);
+        `);
 
-            let eventUpdated = {};
-            eventUpdated.name = $("#name").val();
-            eventUpdated.categorie = $("#categorie").val();
+        let eventUpdated = {};
+        eventUpdated.name = $("#name").val();
+        eventUpdated.categorie = $("#categorie").val();
 
-            $("#modifier-event").on("click", () => {
-                console.log("Envoi ajax PUT");
-            });
+        $("#modifier-event").on("click", () => {
+            console.log("Envoi ajax PUT");
         });
     }
 }

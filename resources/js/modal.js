@@ -12,10 +12,13 @@ class Modal {
      */
     static showModal() {
         let modal = $(".modal");
-        let closeButton = $(".close-button");
 
         modal.addClass("show-modal");
-        closeButton.on("click", Modal.closeModal);
+
+        $(".close-button").on("click", evt => {
+            console.log("close");
+            Modal.closeModal();
+        });
 
         $("body").on("keydown", evt => {
             if (evt.key === "Escape") {
@@ -34,8 +37,14 @@ class Modal {
      * Fermeture d'une fenêtre modal
      */
     static closeModal() {
-        let modal = $(".modal");
-        modal.removeClass("show-modal");
+        $(".modal").removeClass("show-modal");
+        $(".modal-content").html("<span class='close-button'>&times;</span>");
+    }
+
+    /**
+     * Réinitialisation du contenu du modal
+     */
+    static resetModal() {
         $(".modal-content").html("<span class='close-button'>&times;</span>");
     }
 }

@@ -9,8 +9,9 @@ class Events {
      * Récupère les évenements du calendrier depuis l'API puis les enregistre dans le local storage
      */
     getEvents() {
-        $.get(this.URL_EVENTS, data => {
+        return $.get(this.URL_EVENTS, data => {
             localStorage.events = JSON.stringify(data);
+            return data;
         });
     }
 

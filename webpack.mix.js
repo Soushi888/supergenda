@@ -11,7 +11,7 @@ const mix = require("laravel-mix");
  |
  */
 
-mix.babel(
+mix.scripts(
     [
         "resources/js/date.prototype.js",
         "resources/js/modal.js",

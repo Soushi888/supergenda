@@ -2,13 +2,11 @@
 
 class App {
     constructor() {
-        this.semainier = new Semainier();
-        this.modal = new Modal();
-
         let events = new Events();
-        events.getEvents();
-
-        this.semainier.selectEvent();
+        events.getEvents().always(data => {
+            this.modal = new Modal();
+            this.semainier = new Semainier();
+        });
     }
 }
 new App();
