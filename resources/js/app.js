@@ -21,32 +21,12 @@ class App {
                 lundiCourant.getMonth()
             )} ${lundiCourant.getFullYear()}`
         );
-        Semainier.ajusterSemaine(today);
+        this.semainier.ajusterSemaine(today);
 
-        this.udpateDate();
+        this.semainier.udpateDate();
 
         this.semainier.afficherEvents(new Date(lundiCourant));
         this.semainier.selectEvent();
-    }
-
-    udpateDate() {
-        // Change le lundi de la semaine qui est affiché à chaque fois que le input date change
-        $("#datepicker").on("change", evt => {
-            let nouveauLundi = datepicker.getDateOfWeekDay(evt.target.value, 1);
-
-            $("#selection-semaine span").text(
-                `${datepicker.nomJoursSemaine(
-                    nouveauLundi.getDay()
-                )} ${nouveauLundi.getDate()} ${datepicker.nomMois(
-                    nouveauLundi.getMonth()
-                )} ${nouveauLundi.getFullYear()}`
-            );
-
-            let dateSelect = evt.target.value;
-            Semainier.ajusterSemaine(evt.target.value);
-
-            this.semainier.afficherEvents(new Date(nouveauLundi));
-        });
     }
 }
 new App();

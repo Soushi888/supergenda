@@ -20,38 +20,6 @@
             <div class="title m-b-md">
                 <h1>Supergenda</h1>
             </div>
-            <div>
-                <div id="selection-semaine">
-                    <input type="date" id="datepicker">
-                    <p>Semaine du <span></span></p>
-                </div>
-                <table class="agenda">
-                    <thead>
-                        <tr>
-                            <th>Heure</th>
-                            <th class="lundi">Lundi <span></span></th>
-                            <th class="mardi">Mardi <span></span></th>
-                            <th class="mercredi">Mercredi <span></span></th>
-                            <th class="jeudi">Jeudi <span></span></th>
-                            <th class="vendredi">Vendredi <span></span></th>
-                            <th class="samedi">Samedi <span></span></th>
-                            <th class="dimanche">Dimanche <span></span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr id="modele">
-                            <td class="heure"></td>
-                            <td class="lundi"></td>
-                            <td class="mardi"></td>
-                            <td class="mercredi"></td>
-                            <td class="jeudi"></td>
-                            <td class="vendredi"></td>
-                            <td class="samedi"></td>
-                            <td class="dimanche"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
     <script src="http://code.jquery.com/jquery-3.5.1.min.js"

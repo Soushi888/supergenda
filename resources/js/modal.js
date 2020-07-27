@@ -24,7 +24,7 @@ class Modal {
         });
 
         modal.on("click", evt => {
-            if (!$(evt.target).hasClass("modal-content")) {
+            if ($(evt.target).hasClass("modal")) {
                 Modal.closeModal();
             }
         });

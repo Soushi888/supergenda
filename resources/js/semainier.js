@@ -4,6 +4,41 @@ class Semainier {
      */
     constructor() {
         // Génération du semainier
+        $(".content").append(`
+        <div>
+                <div id="selection-semaine">
+                    <input type="date" id="datepicker">
+                    <p>Semaine du <span></span></p>
+                </div>
+                <table class="agenda">
+                    <thead>
+                        <tr>
+                            <th>Heure</th>
+                            <th class="lundi">Lundi <span></span></th>
+                            <th class="mardi">Mardi <span></span></th>
+                            <th class="mercredi">Mercredi <span></span></th>
+                            <th class="jeudi">Jeudi <span></span></th>
+                            <th class="vendredi">Vendredi <span></span></th>
+                            <th class="samedi">Samedi <span></span></th>
+                            <th class="dimanche">Dimanche <span></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="modele">
+                            <td class="heure"></td>
+                            <td class="lundi"></td>
+                            <td class="mardi"></td>
+                            <td class="mercredi"></td>
+                            <td class="jeudi"></td>
+                            <td class="vendredi"></td>
+                            <td class="samedi"></td>
+                            <td class="dimanche"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        `);
+
         for (let i = 0; i <= 47; ++i) {
             let tr = $("#modele")
                 .clone()
@@ -29,15 +64,37 @@ class Semainier {
 
             tbody.append(tr);
 
+            
+
             this.afficherEvents = this.afficherEvents.bind(this);
         }
+    }
+
+    udpateDate() {
+        // Change le lundi de la semaine qui est affiché à chaque fois que le input date change
+        $("#datepicker").on("change", evt => {
+            let nouveauLundi = datepicker.getDateOfWeekDay(evt.target.value, 1);
+
+            $("#selection-semaine span").text(
+                `${datepicker.nomJoursSemaine(
+                    nouveauLundi.getDay()
+                )} ${nouveauLundi.getDate()} ${datepicker.nomMois(
+                    nouveauLundi.getMonth()
+                )} ${nouveauLundi.getFullYear()}`
+            );
+
+            let dateSelect = evt.target.value;
+            this.ajusterSemaine(evt.target.value);
+
+            this.afficherEvents(new Date(nouveauLundi));
+        });
     }
 
     /**
      * Ajuste le numéro des jours à coté des nom des jours de la semaine dans le semainier
      * @param {Date} date
      */
-    static ajusterSemaine(date) {
+    ajusterSemaine(date) {
         let numLundi = $(".lundi span").text(
             datepicker.addZero(datepicker.getDateOfWeekDay(date, 1).getDate())
         );
@@ -219,6 +276,7 @@ class Semainier {
         <p>Heure du début = ${heure_fin}</p>
         `);
 
+        // Modification de l'événement
         $("#modifier-event").on("click", () => {
             console.log("modification de l'événement");
 
@@ -243,8 +301,6 @@ class Semainier {
             let eventUpdated = {};
             eventUpdated.name = $("#name").val();
             eventUpdated.categorie = $("#categorie").val();
-
-            
 
             $("#modifier-event").on("click", () => {
                 console.log("Envoi ajax PUT");
