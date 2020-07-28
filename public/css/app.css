@@ -11028,8 +11028,44 @@ td.heure {
   border-bottom: 1px black solid;
 }
 
-#modifier-event {
+#datepicker {
+  cursor: pointer;
+}
+
+#ajouter-event {
+  float: left;
+}
+
+#categorie-defaut {
+  float: right;
+  width: 22.5%;
+}
+
+#categorie-defaut input {
+  text-align: center;
+}
+
+#selection-semaine {
+  clear: both;
+}
+
+#confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#confirmation p {
+  font-size: 1rem;
+}
+
+.modal-button {
   width: 25%;
+  display: inline-block;
+}
+
+#confirmation .modal-button#non {
+  margin-top: 5px;
 }
 
 #semaine {

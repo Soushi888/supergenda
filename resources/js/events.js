@@ -36,4 +36,14 @@ class Events {
             }
         });
     }
+
+    deleteEvent(event) {
+        return $.ajax({
+            url: `${this.URL_EVENTS}/${event.id}`,
+            type: "DELETE",
+            success: () => {
+                console.log("Suppression réalisée avec succès !");
+            }
+        });
+    }
 }

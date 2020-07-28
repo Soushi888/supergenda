@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Classe contenant des methodes statiques aidant à traiter les dates
  */

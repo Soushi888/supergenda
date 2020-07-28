@@ -44,58 +44,6 @@ Date.prototype.addDays = function(days) {
     return date;
 };
 
-class Modal {
-    constructor() {
-        let modalElement = $("body").append(`<div class="modal">
-            <div class="modal-content">
-                <span class="close-button">&times;</span>
-            </div>
-        </div>`);
-    }
-
-    /**
-     * Ouverture d'une fenêtre modal
-     */
-    static showModal() {
-        let modal = $(".modal");
-
-        modal.addClass("show-modal");
-
-        $(".close-button").on("click", Modal.closeModal);
-
-        $("body").on("keydown", evt => {
-            if (evt.key === "Escape") {
-                Modal.closeModal();
-            }
-        });
-
-        modal.on("click", evt => {
-            if ($(evt.target).hasClass("modal")) {
-                Modal.closeModal();
-            }
-        });
-    }
-
-    /**
-     * Fermeture d'une fenêtre modal
-     */
-    static closeModal() {
-        $(".modal").removeClass("show-modal");
-        $(".modal-content").html("<span class='close-button'>&times;</span>");
-    }
-
-    /**
-     * Réinitialisation du contenu du modal
-     */
-    static resetModal() {
-        $(".modal-content").html("<span class='close-button'>&times;</span>");
-
-        $(".close-button").on("click", Modal.closeModal);
-    }
-}
-
-"use strict";
-
 /**
  * Classe contenant des methodes statiques aidant à traiter les dates
  */
@@ -276,6 +224,56 @@ class datepicker {
     }
 }
 
+class Modal {
+    constructor() {
+        let modalElement = $("body").append(`<div class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+            </div>
+        </div>`);
+    }
+
+    /**
+     * Ouverture d'une fenêtre modal
+     */
+    static showModal() {
+        let modal = $(".modal");
+
+        modal.addClass("show-modal");
+
+        $(".close-button").on("click", Modal.closeModal);
+
+        $("body").on("keydown", evt => {
+            if (evt.key === "Escape") {
+                Modal.closeModal();
+            }
+        });
+
+        modal.on("click", evt => {
+            if ($(evt.target).hasClass("modal")) {
+                Modal.closeModal();
+            }
+        });
+    }
+
+    /**
+     * Fermeture d'une fenêtre modal
+     */
+    static closeModal() {
+        $(".modal").removeClass("show-modal");
+        $(".modal-content").html("<span class='close-button'>&times;</span>");
+    }
+
+    /**
+     * Réinitialisation du contenu du modal
+     */
+    static resetModal() {
+        $(".modal-content").html("<span class='close-button'>&times;</span>");
+
+        $(".close-button").on("click", Modal.closeModal);
+    }
+}
+
 class Events {
     constructor() {
         this.URL_EVENTS = "http://supergenda.perso/api/event";
@@ -314,6 +312,16 @@ class Events {
             }
         });
     }
+
+    deleteEvent(event) {
+        return $.ajax({
+            url: `${this.URL_EVENTS}/${event.id}`,
+            type: "DELETE",
+            success: () => {
+                console.log("Suppression réalisée avec succès !");
+            }
+        });
+    }
 }
 
 class Semainier {
@@ -321,17 +329,21 @@ class Semainier {
      * Génère la structure du semainier
      */
     constructor() {
+        this._categorieDefaut = "cours";
+
         // Génération du semainier
         $(".content").append(`
         <div>
-                <div id="selection-semaine">
-                    <input type="date" id="datepicker">
+                <button id="ajouter-event">Ajouter</button>
+                <span id="categorie-defaut">Catégorie par défaut : <input type="text"></span>
+                <nav id="selection-semaine">
+                    <input type="date" id="datepicker" required>
                     <p>
                         <span id="previousWeek"><</span>
                         <span id="semaine"></span>
-                        <span id="nextWeek">></span>
+                        <span id="nextWeek">></span> 
                     </p>
-                </div>
+                </nav>
                 <table class="agenda">
                     <thead>
                         <tr>
@@ -386,6 +398,9 @@ class Semainier {
 
             tbody.append(tr);
         }
+
+        $("#categorie-defaut input").val(this._categorieDefaut)
+
         // initialise la date avec celle de la semaine courrante
         let today = new Date();
         today.setDate(today.getDate() - 1);
@@ -409,7 +424,10 @@ class Semainier {
         );
 
         $("#previousWeek").on("click", () => {
-            let nouvelleDate = this.udpateDate(new Date($("#datepicker").val()), -7);
+            let nouvelleDate = this.udpateDate(
+                new Date($("#datepicker").val()),
+                -7
+            );
 
             let month = datepicker.addZero(nouvelleDate.getMonth() + 1);
             let day = datepicker.addZero(nouvelleDate.getDate());
@@ -418,7 +436,10 @@ class Semainier {
         });
 
         $("#nextWeek").on("click", () => {
-            let nouvelleDate = this.udpateDate(new Date($("#datepicker").val()), 7);
+            let nouvelleDate = this.udpateDate(
+                new Date($("#datepicker").val()),
+                7
+            );
 
             let month = datepicker.addZero(nouvelleDate.getMonth() + 1);
             let day = datepicker.addZero(nouvelleDate.getDate());
@@ -439,7 +460,6 @@ class Semainier {
     udpateDate(date, diffDays = 0) {
         let nouvelleDate = date.addDays(diffDays);
         let nouveauLundi = datepicker.getDateOfWeekDay(nouvelleDate, 1);
-        console.log(nouveauLundi);
 
         $("#selection-semaine #semaine").text(
             `${datepicker.nomJoursSemaine(
@@ -634,7 +654,10 @@ class Semainier {
         )}:${datepicker.addZero(new Date(event.date_fin).getMinutes())}`;
 
         modalContent.append(`
-        <button id="modifier-event">Modifier</button>
+        <div>
+            <button class="modal-button" id="modifier-event">Modifier</button>
+            <button class="modal-button" id="supprimer-event">Supprimer</button>
+        </div>
         <h1>${event.name}</h1>
         <p>Catégorie = ${event.categorie}</p>
         <p>Journée = ${joursFormate}</p>
@@ -642,8 +665,13 @@ class Semainier {
         <p>Heure du début = ${heure_fin}</p>
         `);
 
+        // Suppression de l'événment
+        $(".modal-button#supprimer-event").on("click", () => {
+            this.supprimerEventForm(event);
+        });
+
         // Modification de l'événement
-        $("#modifier-event").on("click", () => {
+        $(".modal-button#modifier-event").on("click", () => {
             this.updateEventForm(event);
         });
     }
@@ -703,11 +731,11 @@ class Semainier {
             heure_fin
         )}</select></label>
         
-        <button id="modifier-event">Accepter</button>
+        <button class="modal-button">Accepter</button>
         </form>
         `);
 
-        $("#modifier-event").on("click", evt => {
+        $(".modal-button").on("click", evt => {
             evt.preventDefault();
 
             let date = $("#date").val();
@@ -740,15 +768,43 @@ class Semainier {
 
     ajouterEvent() {}
 
-    supprimerEvent() {}
+    supprimerEventForm(event) {
+        let modalContent = $(".modal-content");
+        Modal.resetModal();
+
+        modalContent.append(`
+        <div id="confirmation">
+            <p>Supprimer l'événement : ${event.name} ?</p>
+            <button class="modal-button" id="oui">Oui</button>
+            <button class="modal-button" id="non">Non</button>
+        <div>
+        `);
+
+        $(".modal-button#oui").on("click", () => {
+            let eventRequest = new Events();
+            eventRequest.deleteEvent(event).always(data => {
+                eventRequest.getEvents().always(() => {
+                    this.afficherEvents(
+                        new Date(
+                            datepicker.getDateOfWeekDay(event.date_debut, 1)
+                        )
+                    );
+                });
+            });
+            Modal.closeModal();
+        });
+        $(".modal-button#non").on("click", () => {
+            Modal.closeModal();
+        });
+    }
 }
 
 "use strict";
 
 class App {
     constructor() {
-        this.semainier = new Semainier();
         this.modal = new Modal();
+        this.semainier = new Semainier();
 
         this.events = new Events();
         this.events.getEvents().always(data => {

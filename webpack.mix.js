@@ -14,8 +14,8 @@ const mix = require("laravel-mix");
 mix.scripts(
     [
         "resources/js/date.prototype.js",
-        "resources/js/modal.js",
         "resources/js/datepicker.js",
+        "resources/js/modal.js",
         "resources/js/events.js",
         "resources/js/semainier.js",
         "resources/js/app.js"

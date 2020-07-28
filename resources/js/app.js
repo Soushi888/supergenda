@@ -2,8 +2,8 @@
 
 class App {
     constructor() {
-        this.semainier = new Semainier();
         this.modal = new Modal();
+        this.semainier = new Semainier();
 
         this.events = new Events();
         this.events.getEvents().always(data => {
