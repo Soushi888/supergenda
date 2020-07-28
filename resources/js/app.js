@@ -7,7 +7,6 @@ class App {
 
         this.events = new Events();
         this.events.getEvents().always(data => {
-            this.semainier.udpateDate();
             this.semainier.afficherEvents(new Date());
             this.semainier.selectEvent();
         }).done(data => {

@@ -20,8 +20,8 @@ class Events {
      * @param {object} event event original à modifier
      * @param {object} eventUpdated event de remplacement
      */
-    static updateEvent(event, eventUpdated) {
-        $.ajax({
+    updateEvent(event, eventUpdated) {
+      return $.ajax({
             url: `${this.URL_EVENTS}/${event.id}`,
             type: "PUT",
             dataType: "json",

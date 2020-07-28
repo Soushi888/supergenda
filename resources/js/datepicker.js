@@ -124,7 +124,7 @@ class datepicker {
     }
 
     /**
-     * Retourne le nom en fraçais du numéro de la journée de semaine donné en paramètre.
+     * Retourne le nom en français du numéro de la journée de semaine donné en paramètre.
      * @param {number} jours
      */
     static nomJoursSemaine(jours) {

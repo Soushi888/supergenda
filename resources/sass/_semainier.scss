@@ -1,0 +1,74 @@
+
+table.agenda {
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+.agenda th {
+    padding: 0 1.5em;
+    border: solid 1px black;
+}
+
+.agenda th,
+.agenda td {
+    border-right: black 1px solid;
+}
+
+td.heure {
+    border-left: black 1px solid;
+}
+
+#modele {
+    display: none;
+}
+
+.etDemi td {
+    border-bottom: solid black 2px;
+}
+
+.event {
+    background-color: $indigo;
+    border-left: 1px black solid;
+    border-right: 1px black solid;
+    border-bottom: 0px black solid;
+}
+
+.event:hover {
+    cursor: pointer;
+}
+
+.start-event {
+    border-top: 1px black solid;
+}
+
+.end-event {
+    border-bottom: 1px black solid;
+}
+
+#modifier-event {
+    width: 25%;
+}
+
+#semaine {
+    vertical-align: super;
+}
+
+#previousWeek,
+#nextWeek {
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+#previousWeek:hover,
+#nextWeek:hover {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#previousWeek {
+    margin-right: 10px;
+}
+
+#nextWeek {
+    margin-left: 10px;
+}

@@ -38,6 +38,12 @@ Date.prototype.getWeek = function(dowOffset) {
     return weeknum;
 };
 
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+};
+
 class Modal {
     constructor() {
         let modalElement = $("body").append(`<div class="modal">
@@ -214,7 +220,7 @@ class datepicker {
     }
 
     /**
-     * Retourne le nom en fraçais du numéro de la journée de semaine donné en paramètre.
+     * Retourne le nom en français du numéro de la journée de semaine donné en paramètre.
      * @param {number} jours
      */
     static nomJoursSemaine(jours) {
@@ -292,8 +298,8 @@ class Events {
      * @param {object} event event original à modifier
      * @param {object} eventUpdated event de remplacement
      */
-    static updateEvent(event, eventUpdated) {
-        $.ajax({
+    updateEvent(event, eventUpdated) {
+      return $.ajax({
             url: `${this.URL_EVENTS}/${event.id}`,
             type: "PUT",
             dataType: "json",
@@ -320,7 +326,11 @@ class Semainier {
         <div>
                 <div id="selection-semaine">
                     <input type="date" id="datepicker">
-                    <p>Semaine du <span></span></p>
+                    <p>
+                        <span id="previousWeek"><</span>
+                        <span id="semaine"></span>
+                        <span id="nextWeek">></span>
+                    </p>
                 </div>
                 <table class="agenda">
                     <thead>
@@ -381,8 +391,12 @@ class Semainier {
         today.setDate(today.getDate() - 1);
         let lundiCourant = datepicker.getDateOfWeekDay(today, 1);
 
-        $("#datepicker").val(today.getDate());
-        $("#selection-semaine span").text(
+        let month = datepicker.addZero(today.getMonth() + 1);
+        let day = datepicker.addZero(today.getDate());
+        let dateFormated = `${today.getFullYear()}-${month}-${day}`;
+        $("#datepicker").val(dateFormated);
+
+        $("#selection-semaine #semaine").text(
             `${datepicker.nomJoursSemaine(
                 lundiCourant.getDay()
             )} ${lundiCourant.getDate()} ${datepicker.nomMois(
@@ -390,30 +404,55 @@ class Semainier {
             )} ${lundiCourant.getFullYear()}`
         );
         this.ajusterSemaine(today);
+        $("#datepicker").on("change", evt =>
+            this.udpateDate(datepicker.getDateOfWeekDay(evt.target.value, 1))
+        );
+
+        $("#previousWeek").on("click", () => {
+            let nouvelleDate = this.udpateDate(new Date($("#datepicker").val()), -7);
+
+            let month = datepicker.addZero(nouvelleDate.getMonth() + 1);
+            let day = datepicker.addZero(nouvelleDate.getDate());
+            let dateFormated = `${nouvelleDate.getFullYear()}-${month}-${day}`;
+            $("#datepicker").val(dateFormated);
+        });
+
+        $("#nextWeek").on("click", () => {
+            let nouvelleDate = this.udpateDate(new Date($("#datepicker").val()), 7);
+
+            let month = datepicker.addZero(nouvelleDate.getMonth() + 1);
+            let day = datepicker.addZero(nouvelleDate.getDate());
+            let dateFormated = `${nouvelleDate.getFullYear()}-${month}-${day}`;
+            $("#datepicker").val(dateFormated);
+        });
 
         this.afficherEvents = this.afficherEvents.bind(this);
+        this.udpateDate = this.udpateDate.bind(this);
+        this.updateEventForm = this.updateEventForm.bind(this);
     }
 
     /**
-     * Change le lundi de la semaine qui est affiché à chaque fois que le input date change
+     * Change le lundi de la semaine qui est affiché, ajuste le semainier et les événemnts en fonction de la date donnée. Ajuste la date avec le second paramètre.
+     * @param {Date}
+     * @param {number}
      */
-    udpateDate() {
-        $("#datepicker").on("change", evt => {
-            let nouveauLundi = datepicker.getDateOfWeekDay(evt.target.value, 1);
+    udpateDate(date, diffDays = 0) {
+        let nouvelleDate = date.addDays(diffDays);
+        let nouveauLundi = datepicker.getDateOfWeekDay(nouvelleDate, 1);
+        console.log(nouveauLundi);
 
-            $("#selection-semaine span").text(
-                `${datepicker.nomJoursSemaine(
-                    nouveauLundi.getDay()
-                )} ${nouveauLundi.getDate()} ${datepicker.nomMois(
-                    nouveauLundi.getMonth()
-                )} ${nouveauLundi.getFullYear()}`
-            );
+        $("#selection-semaine #semaine").text(
+            `${datepicker.nomJoursSemaine(
+                nouveauLundi.getDay()
+            )} ${nouveauLundi.getDate()} ${datepicker.nomMois(
+                nouveauLundi.getMonth()
+            )} ${nouveauLundi.getFullYear()}`
+        );
 
-            let dateSelect = evt.target.value;
-            this.ajusterSemaine(evt.target.value);
+        this.ajusterSemaine(nouveauLundi);
 
-            this.afficherEvents(new Date(nouveauLundi));
-        });
+        this.afficherEvents(new Date(nouveauLundi));
+        return nouveauLundi;
     }
 
     /**
@@ -605,14 +644,16 @@ class Semainier {
 
         // Modification de l'événement
         $("#modifier-event").on("click", () => {
-            this.updateEvent(event);
+            this.updateEventForm(event);
         });
     }
 
-    updateEvent(event) {
+    /**
+     * Met à jours le modal d'affichage d'un événement pour pouvoir le modifier.
+     * @param {object} event
+     */
+    updateEventForm(event) {
         let modalContent = $(".modal-content");
-
-        console.log("modification de l'événement");
 
         let date = new Date(event.date_debut);
         let month = datepicker.addZero(date.getMonth() + 1);
@@ -626,35 +667,42 @@ class Semainier {
             new Date(event.date_fin).getHours()
         )}:${datepicker.addZero(new Date(event.date_fin).getMinutes())}`;
 
-        console.log(heure_debut);
-        console.log(heure_fin);
-
-        let optionsHeures = "";
-        for (let i = 0; i <= 47; ++i) {
-            let heure = datepicker.addZero(Math.floor(i / 2));
-
-            if (i % 2 == 0) {
-                heure += ":00";
-                optionsHeures += `<option value="${heure}" ${
-                    heure == heure_debut ? "selected" : ""
-                }>${heure}</option>`;
-            } else {
-                heure += `:30`;
-                optionsHeures += `<option value="${heure}" ${
-                    heure == heure_fin ? "selected" : ""
-                }>${heure}</option>`;
+        function optionsHeures(heureEvent) {
+            let optionsHeures = "";
+            for (let i = 0; i <= 47; ++i) {
+                let heure = datepicker.addZero(Math.floor(i / 2));
+                if (i % 2 == 0) {
+                    heure += ":00";
+                    optionsHeures += `<option value="${heure}" ${
+                        heure === heureEvent ? "selected" : ""
+                    }>${heure}</option>`;
+                } else {
+                    heure += `:30`;
+                    optionsHeures += `<option value="${heure}" ${
+                        heure === heureEvent ? "selected" : ""
+                    }>${heure}</option>`;
+                }
             }
+            return optionsHeures;
         }
 
         Modal.resetModal();
         modalContent.append(`
         <form id="updateForm">
-        <label for="name">Nom : <input type="text" id="name" value="${event.name}"></label><br>
-        <label for="categorie">Catégorie : <input type="text" id="categorie" value="${event.categorie}"></label><br>
+        <label for="name">Nom : <input type="text" id="name" value="${
+            event.name
+        }"></label><br>
+        <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
+            event.categorie
+        }"></label><br>
         <label for="date">Date : <input type="date" id="date" value="${dateFormated}"></label><br>
-        <label for="heure-debut">Heure du début : <select id="heure-debut">${optionsHeures}</select></label>
-        <label for="heure-fin">Heure de fin : <select id="heure-fin">${optionsHeures}</select></label>
-
+        <label for="heure-debut">Heure du début : <select id="heure-debut">${optionsHeures(
+            heure_debut
+        )}</select></label>
+        <label for="heure-fin">Heure de fin : <select id="heure-fin">${optionsHeures(
+            heure_fin
+        )}</select></label>
+        
         <button id="modifier-event">Accepter</button>
         </form>
         `);
@@ -669,17 +717,30 @@ class Semainier {
             let eventUpdated = {};
             eventUpdated.name = $("#name").val();
             eventUpdated.categorie = $("#categorie").val();
-            eventUpdated.date_debut = new Date(`${date} ${heure_debut}`);
-            eventUpdated.date_fin = new Date(`${date} ${heure_fin}`);
+            eventUpdated.date_debut = `${date} ${heure_debut}`;
+            eventUpdated.date_fin = `${date} ${heure_fin}`;
 
-            console.group("Envoi ajax PUT");
-            console.log(eventUpdated);
-            Events.updateEvent(eventUpdated);
-            console.groupEnd;
+            let eventRequest = new Events();
+            eventRequest.updateEvent(event, eventUpdated).always(data => {
+                eventRequest.getEvents().always(() => {
+                    this.afficherEvents(
+                        new Date(
+                            datepicker.getDateOfWeekDay(
+                                eventUpdated.date_debut,
+                                1
+                            )
+                        )
+                    );
+                });
+            });
 
             Modal.closeModal();
         });
     }
+
+    ajouterEvent() {}
+
+    supprimerEvent() {}
 }
 
 "use strict";
@@ -691,7 +752,6 @@ class App {
 
         this.events = new Events();
         this.events.getEvents().always(data => {
-            this.semainier.udpateDate();
             this.semainier.afficherEvents(new Date());
             this.semainier.selectEvent();
         }).done(data => {

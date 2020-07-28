@@ -27,17 +27,22 @@ https://infoo.herokuapp.com/course/js/eval/agendax
 
 ### Fonctionnalités
  L'utilisateur peut :
-- Passer en revue son agenda semaines par semaines
-- Ajouter, modifier, supprimer un événement:
-  - Nom
-  - Date-heure de début
-  - Date-heure de fin
-- L'utilisateur ne perd pas ses préférences
+  - Passer en revue son agenda semaine par semaine
+  - Ajouter, supprimer et modifier un événement avec, au minimum, les propriétés suivants:
+    - Nom
+    - Date-heure de début
+    - Date-heure de fin ou durée
+    - Une catégorie (un nom === chaîne)
+  - Définir une catégorie par défaut utilisée au moment de la création d'un événement. Cette catégorie par défaut devra persister au (re-)chargement/réouverture de la page.
 
-Cependant :
-- Un événement ne s'étend pas sur deux jours
-- Les événements ne se chevauchent pas
-- Pas de login, par de multi-utilisateurs
+
+#### Simplifications possibles :
+- La gestion du fuseau horaire/GMT n'est pas requise
+- Les événement sur deux jours ou plus ne sont pas requis
+- Les événements qui se chevauchent ne sont pas requis
+- La gestion des catégories n'a pas à être traitée au niveau du back-end ce qui évite une table des catégories et des requêtes d'API spécifiques. Dans cette simplification, les catégories et leur couleur associée peuvent être traitées en front-end (localStorage par exemple).
+- 1 seul layout (desktop ou mobile au choix)
+
 
 ### Contraintes techniques
 - Projet déployé sur un hébergement externe

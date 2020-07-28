@@ -10,6 +10,9 @@
 // Modal
 @import "modal.scss";
 
+// Semainier
+@import "semainier.scss";
+
 html,
 body {
     background-color: #fff;
@@ -18,15 +21,6 @@ body {
     font-weight: 200;
     height: 100vh;
     margin: 0;
-}
-
-table {
-    margin-bottom: 20px;
-    border-collapse: collapse;
-}
-
-label {
-    width: max-content;
 }
 
 .full-height {
@@ -72,47 +66,3 @@ label {
     margin-bottom: 30px;
 }
 
-.agenda th {
-    padding: 0 1.5em;
-    border: solid 1px black;
-}
-
-.agenda th,
-.agenda td {
-    border-right: black 1px solid;
-}
-
-td.heure {
-    border-left: black 1px solid;
-}
-
-#modele {
-    display: none;
-}
-
-.etDemi td {
-    border-bottom: solid black 2px;
-}
-
-.event {
-    background-color: $indigo;
-    border-left: 1px black solid;
-    border-right: 1px black solid;
-    border-bottom: 0px black solid;
-}
-
-.event:hover {
-    cursor: pointer;
-}
-
-.start-event {
-    border-top: 1px black solid;
-}
-
-.end-event {
-    border-bottom: 1px black solid;
-}
-
-#modifier-event {
-    width: 25%;
-}
