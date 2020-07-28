@@ -86,6 +86,11 @@ class Modal {
      */
     static resetModal() {
         $(".modal-content").html("<span class='close-button'>&times;</span>");
+        
+        $(".close-button").on("click", evt => {
+            console.log("close");
+            Modal.closeModal();
+        });
     }
 }
 
@@ -649,10 +654,11 @@ class Semainier {
 
 class App {
     constructor() {
-        let events = new Events();
-        events.getEvents().always(data => {
-            this.modal = new Modal();
+        this.events = new Events();
+
+        this.events.getEvents().always(data => {
             this.semainier = new Semainier();
+            this.modal = new Modal();
         });
     }
 }

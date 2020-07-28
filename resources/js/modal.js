@@ -46,5 +46,10 @@ class Modal {
      */
     static resetModal() {
         $(".modal-content").html("<span class='close-button'>&times;</span>");
+        
+        $(".close-button").on("click", evt => {
+            console.log("close");
+            Modal.closeModal();
+        });
     }
 }
