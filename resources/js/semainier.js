@@ -3,7 +3,13 @@ class Semainier {
      * Génère la structure du semainier
      */
     constructor() {
-        this._categorieDefaut = "cours";
+
+        if(!localStorage.categorieDefaut) {
+            this._categorieDefaut = "cours"
+        } 
+        // else {
+        //     this._categorieDefaut = localStorage.categorieDefaut
+        // }
 
         // Génération du semainier
         $(".content").append(`
@@ -73,7 +79,7 @@ class Semainier {
             tbody.append(tr);
         }
 
-        $("#categorie-defaut input").val(this._categorieDefaut)
+        $("#categorie-defaut input").val(this._categorieDefaut);
 
         // initialise la date avec celle de la semaine courrante
         let today = new Date();
