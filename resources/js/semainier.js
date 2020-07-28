@@ -79,11 +79,6 @@ class Semainier {
         );
         this.ajusterSemaine(today);
 
-        this.udpateDate();
-
-        this.afficherEvents(new Date(lundiCourant));
-        this.selectEvent();
-
         this.afficherEvents = this.afficherEvents.bind(this);
     }
 
@@ -310,30 +305,67 @@ class Semainier {
         let date = new Date(event.date_debut);
         let month = datepicker.addZero(date.getMonth() + 1);
         let day = datepicker.addZero(date.getDate());
+        let dateFormated = `${date.getFullYear()}-${month}-${day}`;
+
+        let heure_debut = `${datepicker.addZero(
+            new Date(event.date_debut).getHours()
+        )}:${datepicker.addZero(new Date(event.date_debut).getMinutes())}`;
+        let heure_fin = `${datepicker.addZero(
+            new Date(event.date_fin).getHours()
+        )}:${datepicker.addZero(new Date(event.date_fin).getMinutes())}`;
+
+        console.log(heure_debut);
+        console.log(heure_fin);
 
         let optionsHeures = "";
+        for (let i = 0; i <= 47; ++i) {
+            let heure = datepicker.addZero(Math.floor(i / 2));
+
+            if (i % 2 == 0) {
+                heure += ":00";
+                optionsHeures += `<option value="${heure}" ${
+                    heure == heure_debut ? "selected" : ""
+                }>${heure}</option>`;
+            } else {
+                heure += `:30`;
+                optionsHeures += `<option value="${heure}" ${
+                    heure == heure_fin ? "selected" : ""
+                }>${heure}</option>`;
+            }
+        }
 
         Modal.resetModal();
         modalContent.append(`
-        <label for="name">Nom : <input type="text" id="name" value="${
-            event.name
-        }"></label>
-        <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
-            event.categorie
-        }"></label>
-        <label for="date">Date : <input type="date" id="date" value="${date.getFullYear()}-${month}-${day}"></label>
+        <form id="updateForm">
+        <label for="name">Nom : <input type="text" id="name" value="${event.name}"></label><br>
+        <label for="categorie">Catégorie : <input type="text" id="categorie" value="${event.categorie}"></label><br>
+        <label for="date">Date : <input type="date" id="date" value="${dateFormated}"></label><br>
         <label for="heure-debut">Heure du début : <select id="heure-debut">${optionsHeures}</select></label>
-        <label for="heure-fin">Heure de fin : <select id="heure-fin"></select></label>
+        <label for="heure-fin">Heure de fin : <select id="heure-fin">${optionsHeures}</select></label>
 
         <button id="modifier-event">Accepter</button>
+        </form>
         `);
 
-        let eventUpdated = {};
-        eventUpdated.name = $("#name").val();
-        eventUpdated.categorie = $("#categorie").val();
+        $("#modifier-event").on("click", evt => {
+            evt.preventDefault();
 
-        $("#modifier-event").on("click", () => {
-            console.log("Envoi ajax PUT");
+            let date = $("#date").val();
+            let heure_debut = $("#heure-debut").val();
+            let heure_fin = $("#heure-fin").val();
+
+            let eventUpdated = {};
+            eventUpdated.name = $("#name").val();
+            eventUpdated.categorie = $("#categorie").val();
+            eventUpdated.date_debut = new Date(`${date} ${heure_debut}`);
+            eventUpdated.date_fin = new Date(`${date} ${heure_fin}`);
+
+            console.group("Envoi ajax PUT");
+            console.log(eventUpdated);
+            Events.updateEvent(eventUpdated);
+            console.groupEnd;
+
+            Modal.closeModal();
         });
     }
 }

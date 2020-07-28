@@ -55,10 +55,7 @@ class Modal {
 
         modal.addClass("show-modal");
 
-        $(".close-button").on("click", evt => {
-            console.log("close");
-            Modal.closeModal();
-        });
+        $(".close-button").on("click", Modal.closeModal);
 
         $("body").on("keydown", evt => {
             if (evt.key === "Escape") {
@@ -86,11 +83,8 @@ class Modal {
      */
     static resetModal() {
         $(".modal-content").html("<span class='close-button'>&times;</span>");
-        
-        $(".close-button").on("click", evt => {
-            console.log("close");
-            Modal.closeModal();
-        });
+
+        $(".close-button").on("click", Modal.closeModal);
     }
 }
 
@@ -278,7 +272,7 @@ class datepicker {
 
 class Events {
     constructor() {
-        this.URL_EVENTS = "http://supergenda.perso/api/event/";
+        this.URL_EVENTS = "http://supergenda.perso/api/event";
 
         this.getEvents = this.getEvents.bind(this);
     }
@@ -293,13 +287,19 @@ class Events {
         });
     }
 
-    updateEvent(event, eventUpdated) {
+    /**
+     * Modifie un événement en passant par l'API
+     * @param {object} event event original à modifier
+     * @param {object} eventUpdated event de remplacement
+     */
+    static updateEvent(event, eventUpdated) {
         $.ajax({
-            url: `${this.URL_EVENTS}${event.id}`,
+            url: `${this.URL_EVENTS}/${event.id}`,
             type: "PUT",
             dataType: "json",
             data: {
                 name: eventUpdated.name,
+                categorie: eventUpdated.categorie,
                 date_debut: eventUpdated.date_debut,
                 date_fin: eventUpdated.date_fin
             },
@@ -390,11 +390,6 @@ class Semainier {
             )} ${lundiCourant.getFullYear()}`
         );
         this.ajusterSemaine(today);
-
-        this.udpateDate();
-
-        this.afficherEvents(new Date(lundiCourant));
-        this.selectEvent();
 
         this.afficherEvents = this.afficherEvents.bind(this);
     }
@@ -622,30 +617,67 @@ class Semainier {
         let date = new Date(event.date_debut);
         let month = datepicker.addZero(date.getMonth() + 1);
         let day = datepicker.addZero(date.getDate());
+        let dateFormated = `${date.getFullYear()}-${month}-${day}`;
+
+        let heure_debut = `${datepicker.addZero(
+            new Date(event.date_debut).getHours()
+        )}:${datepicker.addZero(new Date(event.date_debut).getMinutes())}`;
+        let heure_fin = `${datepicker.addZero(
+            new Date(event.date_fin).getHours()
+        )}:${datepicker.addZero(new Date(event.date_fin).getMinutes())}`;
+
+        console.log(heure_debut);
+        console.log(heure_fin);
 
         let optionsHeures = "";
+        for (let i = 0; i <= 47; ++i) {
+            let heure = datepicker.addZero(Math.floor(i / 2));
+
+            if (i % 2 == 0) {
+                heure += ":00";
+                optionsHeures += `<option value="${heure}" ${
+                    heure == heure_debut ? "selected" : ""
+                }>${heure}</option>`;
+            } else {
+                heure += `:30`;
+                optionsHeures += `<option value="${heure}" ${
+                    heure == heure_fin ? "selected" : ""
+                }>${heure}</option>`;
+            }
+        }
 
         Modal.resetModal();
         modalContent.append(`
-        <label for="name">Nom : <input type="text" id="name" value="${
-            event.name
-        }"></label>
-        <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
-            event.categorie
-        }"></label>
-        <label for="date">Date : <input type="date" id="date" value="${date.getFullYear()}-${month}-${day}"></label>
+        <form id="updateForm">
+        <label for="name">Nom : <input type="text" id="name" value="${event.name}"></label><br>
+        <label for="categorie">Catégorie : <input type="text" id="categorie" value="${event.categorie}"></label><br>
+        <label for="date">Date : <input type="date" id="date" value="${dateFormated}"></label><br>
         <label for="heure-debut">Heure du début : <select id="heure-debut">${optionsHeures}</select></label>
-        <label for="heure-fin">Heure de fin : <select id="heure-fin"></select></label>
+        <label for="heure-fin">Heure de fin : <select id="heure-fin">${optionsHeures}</select></label>
 
         <button id="modifier-event">Accepter</button>
+        </form>
         `);
 
-        let eventUpdated = {};
-        eventUpdated.name = $("#name").val();
-        eventUpdated.categorie = $("#categorie").val();
+        $("#modifier-event").on("click", evt => {
+            evt.preventDefault();
 
-        $("#modifier-event").on("click", () => {
-            console.log("Envoi ajax PUT");
+            let date = $("#date").val();
+            let heure_debut = $("#heure-debut").val();
+            let heure_fin = $("#heure-fin").val();
+
+            let eventUpdated = {};
+            eventUpdated.name = $("#name").val();
+            eventUpdated.categorie = $("#categorie").val();
+            eventUpdated.date_debut = new Date(`${date} ${heure_debut}`);
+            eventUpdated.date_fin = new Date(`${date} ${heure_fin}`);
+
+            console.group("Envoi ajax PUT");
+            console.log(eventUpdated);
+            Events.updateEvent(eventUpdated);
+            console.groupEnd;
+
+            Modal.closeModal();
         });
     }
 }
@@ -654,11 +686,16 @@ class Semainier {
 
 class App {
     constructor() {
-        this.events = new Events();
+        this.semainier = new Semainier();
+        this.modal = new Modal();
 
+        this.events = new Events();
         this.events.getEvents().always(data => {
-            this.semainier = new Semainier();
-            this.modal = new Modal();
+            this.semainier.udpateDate();
+            this.semainier.afficherEvents(new Date());
+            this.semainier.selectEvent();
+        }).done(data => {
+            console.log(data);
         });
     }
 }
