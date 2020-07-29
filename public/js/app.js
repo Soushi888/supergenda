@@ -729,7 +729,7 @@ class Semainier {
         <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
             event.categorie
         }"></label><br>
-        <label for="date">Date : <input type="date" id="date" value="${dateFormated}"></label><br>
+        <label for="date">Date : <input type="date" id="date" value="${dateFormated}" required></label><br>
         <label for="heure-debut">Heure du début : <select id="heure-debut">${optionsHeures(
             heure_debut
         )}</select></label>

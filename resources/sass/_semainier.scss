@@ -44,7 +44,7 @@ td.heure {
     border-bottom: 1px black solid;
 }
 
-#datepicker {
+input[type="date"], select {
     cursor: pointer;
 }
 

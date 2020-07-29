@@ -11028,7 +11028,8 @@ td.heure {
   border-bottom: 1px black solid;
 }
 
-#datepicker {
+input[type=date],
+select {
   cursor: pointer;
 }
 
@@ -11100,6 +11101,10 @@ body {
   font-weight: 200;
   height: 100vh;
   margin: 0;
+}
+
+select {
+  border-top: 1px solid grey;
 }
 
 .full-height {
