@@ -3,14 +3,6 @@ class Semainier {
      * Génère la structure du semainier
      */
     constructor() {
-
-        if(!localStorage.categorieDefaut) {
-            this._categorieDefaut = "cours"
-        } 
-        // else {
-        //     this._categorieDefaut = localStorage.categorieDefaut
-        // }
-
         // Génération du semainier
         $(".content").append(`
         <div>
@@ -79,7 +71,17 @@ class Semainier {
             tbody.append(tr);
         }
 
-        $("#categorie-defaut input").val(this._categorieDefaut);
+        if (!localStorage.categorieDefaut) {
+            localStorage.categorieDefaut = "cours";
+        }
+
+        this._categorieDefaut = localStorage.categorieDefaut;
+
+        $("#categorie-defaut input")
+            .val(this._categorieDefaut)
+            .on("input", evt => {
+                localStorage.categorieDefaut = $(evt.target).val();
+            });
 
         // initialise la date avec celle de la semaine courrante
         let today = new Date();
@@ -127,9 +129,16 @@ class Semainier {
             $("#datepicker").val(dateFormated);
         });
 
+        $("#ajouter-event").on("click", () => {
+            this.ajouterEventForm();
+        });
+
         this.afficherEvents = this.afficherEvents.bind(this);
+        this.selectEvent = this.selectEvent.bind(this);
         this.udpateDate = this.udpateDate.bind(this);
+        this.ajouterEventForm = this.ajouterEventForm.bind(this);
         this.updateEventForm = this.updateEventForm.bind(this);
+        this.supprimerEventForm = this.supprimerEventForm.bind(this);
     }
 
     /**
@@ -150,8 +159,8 @@ class Semainier {
         );
 
         this.ajusterSemaine(nouveauLundi);
-
         this.afficherEvents(new Date(nouveauLundi));
+
         return nouveauLundi;
     }
 
@@ -184,15 +193,16 @@ class Semainier {
     }
 
     /**
-     * Affiche dans le semainier les événements stockés dans le localStorage d'une semaine en particulier
+     * Affiche dans le semainier les événements d'une semaine en particulier stockés dans le localStorage
      * @param {Date} monday
      */
     afficherEvents(monday) {
+        $("td")
+            .removeClass("event start-event end-event")
+            .removeData("id");
+
         let year = monday.getFullYear();
         let week = monday.getWeek();
-
-        $("td").removeClass("event start-event end-event");
-
         let events = [];
 
         $(JSON.parse(localStorage.events)).each((index, element) => {
@@ -218,9 +228,9 @@ class Semainier {
 
             $(`td.${jours}`).each((index, element) => {
                 if ($(element).data("houre") == heure_debut) {
-                    $(element).addClass("event");
-                    $(element).addClass("start-event");
-                    $(element).data("id", id);
+                    $(element)
+                        .addClass("event start-event")
+                        .data("id", id);
                 }
                 if ($(element).data("houre") == heure_fin) {
                     $(element)
@@ -232,8 +242,8 @@ class Semainier {
                         .parent()
                         .prev()
                         .children(`.${jours}`)
-                        .addClass("end-event");
-                    $(element).data("id", id);
+                        .addClass("end-event")
+                        .data("id", id);
                 }
                 if (
                     $(element).data("houre") > heure_debut &&
@@ -244,10 +254,12 @@ class Semainier {
                 }
             });
         });
+
+        this.selectEvent();
     }
 
     /**
-     * Selection d'un événement du semainier
+     * Selection des événements du semainier
      */
     selectEvent() {
         let events = JSON.parse(localStorage.events),
@@ -267,7 +279,6 @@ class Semainier {
                     });
 
                     $(element).on("click", evt => {
-                        console.log(event);
                         this.afficherEvent(event);
                     });
 
@@ -307,6 +318,8 @@ class Semainier {
                             }
                         });
                     });
+                } else {
+                    $(element).off();
                 }
             });
         }
@@ -333,6 +346,7 @@ class Semainier {
             new Date(event.date_fin).getHours()
         )}:${datepicker.addZero(new Date(event.date_fin).getMinutes())}`;
 
+        Modal.resetModal();
         modalContent.append(`
         <div>
             <button class="modal-button" id="modifier-event">Modifier</button>
@@ -399,10 +413,10 @@ class Semainier {
         <form id="updateForm">
         <label for="name">Nom : <input type="text" id="name" value="${
             event.name
-        }"></label><br>
+        }" required></label><br>
         <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
             event.categorie
-        }"></label><br>
+        }" required></label><br>
         <label for="date">Date : <input type="date" id="date" value="${dateFormated}" required></label><br>
         <label for="heure-debut">Heure du début : <select id="heure-debut">${optionsHeures(
             heure_debut
@@ -446,8 +460,77 @@ class Semainier {
         });
     }
 
-    ajouterEvent() {}
+    /**
+     *
+     * @param {object} event
+     */
+    ajouterEventForm(event) {
+        let modalContent = $(".modal-content");
 
+        function optionsHeures() {
+            let optionsHeures = "";
+            for (let i = 0; i <= 47; ++i) {
+                let heure = datepicker.addZero(Math.floor(i / 2));
+                if (i % 2 == 0) {
+                    heure += ":00";
+                    optionsHeures += `<option value="${heure}">${heure}</option>`;
+                } else {
+                    heure += `:30`;
+                    optionsHeures += `<option value="${heure}">${heure}</option>`;
+                }
+            }
+            return optionsHeures;
+        }
+
+        Modal.resetModal();
+        Modal.showModal();
+
+        modalContent.append(`
+        <form id="addForm">
+        <label for="name">Nom : <input type="text" id="name" required></label><br>
+        <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
+            localStorage.categorieDefaut
+        }" required></label><br>
+        <label for="date">Date : <input type="date" id="date" required></label><br>
+        <label for="heure-debut">Heure du début : <select id="heure-debut">${optionsHeures()}</select></label>
+        <label for="heure-fin">Heure de fin : <select id="heure-fin">${optionsHeures()}</select></label>
+        
+        <button class="modal-button">Accepter</button>
+        </form>
+        `);
+
+        $(".modal-button").on("click", evt => {
+            evt.preventDefault();
+
+            let date = $("#date").val();
+            let heure_debut = $("#heure-debut").val();
+            let heure_fin = $("#heure-fin").val();
+
+            let event = {};
+            event.name = $("#name").val();
+            event.categorie = $("#categorie").val();
+            event.date_debut = `${date} ${heure_debut}`;
+            event.date_fin = `${date} ${heure_fin}`;
+
+            let eventRequest = new Events();
+            eventRequest.addEvent(event).always(data => {
+                eventRequest.getEvents().always(() => {
+                    this.afficherEvents(
+                        new Date(
+                            datepicker.getDateOfWeekDay(event.date_debut, 1)
+                        )
+                    );
+                });
+            });
+
+            Modal.closeModal();
+        });
+    }
+
+    /**
+     *
+     * @param {object} event
+     */
     supprimerEventForm(event) {
         let modalContent = $(".modal-content");
         Modal.resetModal();

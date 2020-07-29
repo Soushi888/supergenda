@@ -21,7 +21,7 @@ class Events {
      * @param {object} eventUpdated event de remplacement
      */
     updateEvent(event, eventUpdated) {
-      return $.ajax({
+        return $.ajax({
             url: `${this.URL_EVENTS}/${event.id}`,
             type: "PUT",
             dataType: "json",
@@ -33,6 +33,23 @@ class Events {
             },
             success: () => {
                 console.log("Mise à jours réalisée avec succès !");
+            }
+        });
+    }
+
+    addEvent(event) {
+        return $.ajax({
+            url: `${this.URL_EVENTS}`,
+            type: "POST",
+            dataType: "json",
+            data: {
+                name: event.name,
+                categorie: event.categorie,
+                date_debut: event.date_debut,
+                date_fin: event.date_fin
+            },
+            success: () => {
+                console.log("Ajout réalisé avec succès !");
             }
         });
     }
