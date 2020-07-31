@@ -2,9 +2,8 @@
 
 ## Démo
 
-Calendrier :
 
--   [https://cmaisonneuve.sacha-pignot.website/supergenda/](https://cmaisonneuve.sacha-pignot.website/supergenda/)
+[https://cmaisonneuve.sacha-pignot.website/supergenda/](https://cmaisonneuve.sacha-pignot.website/supergenda/)
 
 ## Énoncé
 
