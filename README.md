@@ -1,9 +1,12 @@
 # Supergenda, le super agenda !
 
+## GIT
+
+https://github.com/Soushi888/supergenda
+
 ## Démo
 
-
-[https://cmaisonneuve.sacha-pignot.website/supergenda/](https://cmaisonneuve.sacha-pignot.website/supergenda/)
+https://cmaisonneuve.sacha-pignot.website/supergenda/
 
 ## Énoncé
 
@@ -37,17 +40,25 @@ L'utilisateur peut :
 
     \$ php artisan migrate --seed
 
+4. Pour travailler la partie front-end, vous avez besoins de node et de npm. Une fois les deux installés :
+
+    \$ npm install
+
+    \$ npm run watch
+
 ## front-end
 
 Les fichiers du dossier ressources/css et ressources/js sont compompilés dans les fichiers public/css/app.css et public/js/app.js.
 
-Ils sont compilé par les instructions données dans le fichier webpack.mix.js qui est à la racine
+Ils sont compilé par les instructions données dans le fichier webpack.mix.js qui est à la racine. 
+
+En utilsant la commande `npm run watch`, les fichiers se compilent automatiquement.
 
 ### Liste des fichiers front-end dans leur ordre de chargement :
 
--   `date.prototype.js` : Contient des methodes ajoutées à la classe Date
--   `datepicker.js` : Contient des methodes statics utiles pour formatter les dates
--   `modal.js` : Classe de Modal utilisée pour géerer les modals
+-   `date.prototype.js` : Contient des méthodes ajoutées à la classe Date
+-   `datepicker.js` : Contient des méthodes statics utiles pour formatter les dates
+-   `modal.js` : Classe de Modal utilisée pour gérer les modals
 -   `events.js` : Interface avec l'API
 -   `semainier.js` : Coeur de l'appication qui gère le semainier
 -   `app.js` : Intégration du semainier dans une appication
