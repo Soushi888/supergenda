@@ -475,13 +475,6 @@ class Semainier {
         $("#ajouter-event").on("click", () => {
             this.ajouterEventForm();
         });
-
-        this.afficherEvents = this.afficherEvents.bind(this);
-        this.selectEvent = this.selectEvent.bind(this);
-        this.udpateDate = this.udpateDate.bind(this);
-        this.ajouterEventForm = this.ajouterEventForm.bind(this);
-        this.updateEventForm = this.updateEventForm.bind(this);
-        this.supprimerEventForm = this.supprimerEventForm.bind(this);
     }
 
     /**
@@ -754,21 +747,21 @@ class Semainier {
         Modal.resetModal();
         modalContent.append(`
         <form id="updateForm">
-        <label for="name">Nom : <input type="text" id="name" value="${
-            event.name
-        }" required></label><br>
-        <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
-            event.categorie
-        }" required></label><br>
-        <label for="date">Date : <input type="date" id="date" value="${dateFormated}" required></label><br>
-        <label for="heure-debut">Heure du début : <select id="heure-debut">${optionsHeures(
-            heure_debut
-        )}</select></label>
-        <label for="heure-fin">Heure de fin : <select id="heure-fin">${optionsHeures(
-            heure_fin
-        )}</select></label>
-        
-        <button class="modal-button">Accepter</button>
+            <label for="name">Nom : <input type="text" id="name" value="${
+                event.name
+            }" required></label><br>
+            <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
+                event.categorie
+            }" required></label><br>
+            <label for="date">Date : <input type="date" id="date" value="${dateFormated}" required></label><br>
+            <label for="heure-debut">Heure du début : <select id="heure-debut">${optionsHeures(
+                heure_debut
+            )}</select></label>
+            <label for="heure-fin">Heure de fin : <select id="heure-fin">${optionsHeures(
+                heure_fin
+            )}</select></label>
+            
+            <button class="modal-button">Accepter</button>
         </form>
         `);
 
@@ -830,15 +823,15 @@ class Semainier {
 
         modalContent.append(`
         <form id="addForm">
-        <label for="name">Nom : <input type="text" id="name" required></label><br>
-        <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
-            localStorage.categorieDefaut
-        }" required></label><br>
-        <label for="date">Date : <input type="date" id="date" required></label><br>
-        <label for="heure-debut">Heure du début : <select id="heure-debut">${optionsHeures()}</select></label>
-        <label for="heure-fin">Heure de fin : <select id="heure-fin">${optionsHeures()}</select></label>
-        
-        <button class="modal-button">Accepter</button>
+            <label for="name">Nom : <input type="text" id="name" required></label><br>
+            <label for="categorie">Catégorie : <input type="text" id="categorie" value="${
+                localStorage.categorieDefaut
+            }" required></label><br>
+            <label for="date">Date : <input type="date" id="date" required></label><br>
+            <label for="heure-debut">Heure du début : <select id="heure-debut">${optionsHeures()}</select></label>
+            <label for="heure-fin">Heure de fin : <select id="heure-fin">${optionsHeures()}</select></label>
+            
+            <button class="modal-button">Accepter</button>
         </form>
         `);
 
