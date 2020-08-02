@@ -8,70 +8,7 @@ class datepicker {
      * @returns {string}
      */
     static addZero(number) {
-        switch (number) {
-            case 0:
-                number = "00";
-                break;
-            case "0":
-                number = "00";
-                break;
-            case 1:
-                number = "01";
-                break;
-            case "1":
-                number = "01";
-                break;
-            case 2:
-                number = "02";
-                break;
-            case "2":
-                number = "02";
-                break;
-            case 3:
-                number = "03";
-                break;
-            case "3":
-                number = "03";
-                break;
-            case 4:
-                number = "04";
-                break;
-            case "4":
-                number = "04";
-                break;
-            case 5:
-                number = "05";
-                break;
-            case "5":
-                number = "05";
-                break;
-            case 6:
-                number = "06";
-                break;
-            case "6":
-                number = "06";
-                break;
-            case 7:
-                number = "07";
-                break;
-            case "7":
-                number = "07";
-                break;
-            case 8:
-                number = "08";
-                break;
-            case "8":
-                number = "08";
-                break;
-            case 9:
-                number = "09";
-                break;
-            case "9":
-                number = "09";
-                break;
-        }
-
-        return number;
+        return 0 + number;
     }
 
     /**
