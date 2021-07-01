@@ -62,7 +62,7 @@ En utilsant la commande `npm run watch`, les fichiers se compilent automatiqueme
 -   `modal.js` : Classe de Modal utilisée pour gérer les modals
 -   `events.js` : Interface avec l'API
 -   `semainier.js` : Coeur de l'appication qui gère le semainier
--   `app.js` : Intégration du semainier dans une appication
+-   `app.js` : Intégration du semainier dans une application
 
 ## API
 
@@ -78,6 +78,6 @@ https://cmaisonneuve.sacha-pignot.website/supergenda/public/api/
 
 ## Base de donnée
 
-La structure de la table event se trouve dans le fichier database/migrations/2020_06_23_221949_create_events_table.php
+La structure de la table event se trouve dans le fichier `database/migrations/2020_06_23_221949_create_events_table.php`
 
-Les données de demonstration sont créé par le fichier database/seeds/EventTableSeeder.php
+Les données de demonstration sont créé par le fichier `database/seeds/EventTableSeeder.php`
